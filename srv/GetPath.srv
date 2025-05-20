@@ -1,0 +1,7 @@
+string goal_name
+---
+nav_msgs/Path path          # For visualization
+geometry_msgs/PoseStamped[] waypoints      # Sequence of target poses
+string[] suggested_actions  # Hints for the executor
+string[] descriptions      # Optional descriptions for debugging          # For visualization
+warehouse_robot/ActionStep[] action_steps    # Sequence of waypoints with suggested actions

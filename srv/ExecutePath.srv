@@ -1,0 +1,6 @@
+geometry_msgs/PoseStamped[] waypoints
+string[] suggested_actions
+string[] descriptions
+---
+bool success
+

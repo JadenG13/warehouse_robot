@@ -1,0 +1,54 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="cmd_vel_topic" default="/cmd_vel" />
+  <arg name="odom_topic" default="odom" />
+  <arg name="move_forward_only" default="false"/>
+
+  <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/costmap_common_params_$(arg model).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find turtlebot3_navigation)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/dwa_local_planner_params_$(arg model).yaml" command="load" />
+    
+    <!-- Custom parameter overrides for better wall handling -->
+    <!-- Costmap parameters -->
+    <param name="local_costmap/inflation_radius" value="0.1" />
+    <param name="global_costmap/inflation_radius" value="0.2" />
+    
+    <!-- Recovery behaviors -->
+    <param name="recovery_behavior_enabled" value="true" />
+    <param name="clearing_rotation_allowed" value="true" />
+    <param name="conservative_reset_dist" value="0.2" />
+    <param name="recovery_behaviors/conservative_reset/reset_distance" value="0.2" />
+    
+    <!-- DWA parameters for tight spaces -->
+    <param name="DWAPlannerROS/max_vel_theta" value="1.5" />
+    <param name="DWAPlannerROS/min_vel_theta" value="-1.5" />
+    <param name="DWAPlannerROS/max_rot_vel" value="1.5" />
+    <param name="DWAPlannerROS/acc_lim_theta" value="3.0" />
+    <param name="DWAPlannerROS/acc_lim_x" value="1.5" />
+    <param name="DWAPlannerROS/acc_lim_y" value="0.0" />
+    
+    <!-- More aggressive goal tolerance -->
+    <param name="DWAPlannerROS/xy_goal_tolerance" value="0.1" />
+    <param name="DWAPlannerROS/yaw_goal_tolerance" value="0.1" />
+    
+    <!-- Cost function tweaks -->
+    <param name="DWAPlannerROS/path_distance_bias" value="20.0" />
+    <param name="DWAPlannerROS/goal_distance_bias" value="10.0" />
+    <param name="DWAPlannerROS/occdist_scale" value="0.02" />
+    
+    <!-- Allow backwards motion -->
+    <param name="DWAPlannerROS/min_vel_x" value="-0.1" />
+    <param name="DWAPlannerROS/min_vel_trans" value="0.05" />
+    
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+  </node>
+</launch>

@@ -1,0 +1,44 @@
+<launch>
+  <!-- Global argument: name of the world -->
+  <arg name="world_name" default="warehouse_1" />
+  <arg name="model" default="burger"/>
+
+  <!-- Make world_name available globally and to nodes -->
+  <param name="world_name" value="$(arg world_name)" />
+
+  <!-- Load world config parameters -->
+  <rosparam file="$(find warehouse_robot)/config/params.yaml" command="load" />
+
+  <!-- Grid overlay with private param ~world_name -->
+  <node pkg="warehouse_robot" type="grid_overlay_publisher.py" name="grid_overlay_publisher" output="screen">
+    <param name="world_name" value="$(arg world_name)" />
+  </node>
+
+  <!-- Manager node doesn't need private params -->
+  <node pkg="warehouse_robot" type="manager_agent.py" name="manager_agent" output="screen" />
+
+  <!-- Planner node needs access to ~world_name -->
+  <node pkg="warehouse_robot" type="planner_agent.py" name="planner_agent" output="screen">
+    <param name="world_name" value="$(arg world_name)" />
+  </node>
+
+  <!-- Validator node needs access to ~world_name -->
+  <node pkg="warehouse_robot" type="validator_agent.py" name="validator_agent" output="screen">
+    <param name="world_name" value="$(arg world_name)" />
+  </node>
+  
+  <!-- Executor node needs access to ~world_name -->
+  <arg name="executor_node" default="executor_agent.py" />
+  <node pkg="warehouse_robot" type="$(arg executor_node)" name="executor_agent" output="screen">
+    <param name="world_name" value="$(arg world_name)" />
+  </node>
+
+  <!-- Launch Gazebo simulation of warehouse -->
+  <arg name="gazebo_world_launch" default="$(find warehouse_robot)/launch/turtlebot3_$(arg world_name).launch" />
+  <include file="$(arg gazebo_world_launch)" />
+
+  <!-- Launch navigation with correct map -->
+  <include file="$(find warehouse_robot)/launch/turtlebot3_navigation.launch" >
+    <arg name="map_file" value="$(find warehouse_robot)/maps/$(arg world_name).yaml" />
+  </include>
+</launch>

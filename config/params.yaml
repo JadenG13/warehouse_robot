@@ -1,0 +1,21 @@
+warehouse_1:
+  cell_size: 0.2
+  grid_origin_x: -3
+  grid_origin_y: -3
+  grid_width: 6
+  grid_height: 6
+  locations:
+    start:            [40, 45, 0]
+    charging_station: [58, 44, 0]
+    storage_area:     [42, 52, 0] 
+  
+warehouse_2:
+  cell_size: 0.2
+  grid_origin_x: -4
+  grid_origin_y: -4
+  grid_width: 8
+  grid_height: 8
+  locations:
+    start:            [4, 8, 0]
+    charging_station: [5, 15, 0]
+    storage_area:     [12, 4, 0] 

@@ -1,0 +1,7 @@
+# AssignTask.srv
+string  robot_id
+string  task_id
+string  location_name
+---
+bool    accepted
+string  message

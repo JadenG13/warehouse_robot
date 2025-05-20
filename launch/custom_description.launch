@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Load robot description with custom scan rate -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find warehouse_robot)/urdf/turtlebot3_burger_custom.urdf.xacro'"/>
+</launch>
