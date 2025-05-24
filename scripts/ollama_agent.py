@@ -3,6 +3,7 @@ import rospy, json, re
 from warehouse_robot.srv import AssignTask, AssignTaskRequest
 from warehouse_robot.msg import RobotStatus
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from warehouse_robot.srv import GetPath, ExecutePath
 import ollama
 
 class OllamaAgent:
@@ -45,7 +46,7 @@ class OllamaAgent:
         rospy.wait_for_service('/assign_task')
         self.assign_srv = rospy.ServiceProxy('/assign_task', AssignTask)
 
-        # 7) Poll the LLM every 2 seconds
+        # 7) Poll the LLM every 100 seconds
         self.timer = rospy.Timer(rospy.Duration(2.0), self.decide_cb)
 
         rospy.loginfo(f"[OLLAMA] Ready in world '{self.world_name}'")
@@ -57,9 +58,11 @@ class OllamaAgent:
         self.current_pose = {'x': p.x, 'y': p.y, 'theta': yaw}
 
     def decide_cb(self, _):
+        # guard: we need a pose to ask the LLM
         if self.current_pose is None:
             return
 
+        # 1) Prompt the LLM as before…
         prompt_payload = {
             'robot_pose':    self.current_pose,
             'pending_tasks': self.task_list,
@@ -75,7 +78,7 @@ class OllamaAgent:
             prompt=json.dumps(prompt_payload)
         ).response.strip()
 
-        # Try proper JSON, then fallback to regex
+        # 2) Extract next_id via JSON or regex
         try:
             data    = json.loads(text)
             next_id = data['next_task']
@@ -86,19 +89,41 @@ class OllamaAgent:
                 return
             next_id = m.group(1)
 
-        # Call AssignTask
+        # 3) Assign the task
         req = AssignTaskRequest(robot_id="robot_1",
                                 task_id=next_id,
                                 location_name=next_id)
         res = self.assign_srv(req)
-        if res.accepted:
-            rospy.loginfo(f"[OLLAMA] Assigned {next_id}: {res.message}")
-            self.busy = True
-            rospy.loginfo("[OLLAMA] Sleeping 100 s to observe robot motion…")
-            rospy.sleep(100)
-        else:
+        if not res.accepted:
             rospy.logwarn(f"[OLLAMA] Assignment failed: {res.message}")
+            return
 
+        rospy.loginfo(f"[OLLAMA] Assigned {next_id}: {res.message}")
+        self.busy = True
+
+        # 4) Plan via GetPath
+        rospy.wait_for_service('/get_path')
+        get_path = rospy.ServiceProxy('/get_path', GetPath)
+        path_resp = get_path(goal_name=next_id)
+
+        # 5) Execute via ExecutePath
+        rospy.wait_for_service('/execute_path')
+        exec_path = rospy.ServiceProxy('/execute_path', ExecutePath)
+        exec_resp = exec_path(
+            waypoints=path_resp.waypoints,
+            suggested_actions=path_resp.suggested_actions,
+            descriptions=path_resp.descriptions
+        )
+
+        if exec_resp.success:
+            rospy.loginfo(f"[OLLAMA] Started execution of {next_id}")
+            # —— TEST PAUSE: let the robot move for 100 seconds ——
+            rospy.loginfo("[OLLAMA] Will re-query the LLM in 100 s…")
+            rospy.Timer(rospy.Duration(25.0),
+                        self.decide_cb,
+                        oneshot=True)
+        else:
+            rospy.logerr(f"[OLLAMA] Execution failed: {exec_resp}")
     @staticmethod
     def _yaw_from_quat(q):
         import numpy as np
