@@ -188,6 +188,7 @@ catkin_install_python(PROGRAMS
   # scripts/executor_agent_amcl.py
   scripts/executor_agent_move_base.py
   scripts/send_goal.py
+  scripts/ollama_agent.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

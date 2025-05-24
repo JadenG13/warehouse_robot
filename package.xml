@@ -64,6 +64,7 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>message_generation</build_depend> <!-- For custom services -->
+
   
   
   <build_export_depend>actionlib</build_export_depend>
@@ -85,6 +86,9 @@
   <exec_depend>message_runtime</exec_depend> <!-- For custom services -->
   <exec_depend>turtlebot3_gazebo</exec_depend>
   <exec_depend>turtlebot3_navigation</exec_depend>
+  <!-- in warehouse_robot/package.xml -->
+  <exec_depend>python3-ollama</exec_depend>
+
 
 
   <!-- The export tag contains other, unspecified, tags -->
