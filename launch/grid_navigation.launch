@@ -36,6 +36,17 @@
     <param name="world_name" value="$(arg world_name)" />
   </node>
 
+    <!-- OLLAMA AGENT -->
+  <node pkg="warehouse_robot"
+        type="ollama_agent.py"
+        name="ollama_agent"
+        output="screen">
+    <!-- point it at the same world_name so it can pull the same map_cfg -->
+    <param name="world_name" value="$(arg world_name)"/>
+    <!-- optional: override which LLM model to use -->
+    <param name="model"      value="llama3.2"/>
+  </node>
+
   <!-- Launch Gazebo simulation of warehouse -->
   <include file="$(find warehouse_robot)/launch/world.launch" >
     <arg name="world_name" value="$(arg world_name)" />
