@@ -3,8 +3,10 @@
 import rospy, heapq
 import numpy as np
 from warehouse_robot.srv import GetPath, GetPathResponse
-from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped, PoseArray, Pose, Quaternion
+from geometry_msgs.msg import PoseStamped, Pose, Quaternion
 from nav_msgs.msg import OccupancyGrid, Path
+from gazebo_msgs.srv import GetModelState
+from tf.transformations import euler_from_quaternion
 
 class PlannerAgent:
     def __init__(self):
@@ -16,6 +18,10 @@ class PlannerAgent:
         self.world_name = rospy.get_param("~world_name")
         self.config = rospy.get_param(self.world_name)
         self.cell_size = self.config["cell_size"]
+
+        # Wait for gazebo service
+        rospy.wait_for_service('/gazebo/get_model_state')
+        self.get_model_state = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
 
         # Expose the new GetPath service
         self.srv = rospy.Service('get_path', GetPath, self.handle_get_path)
@@ -39,20 +45,31 @@ class PlannerAgent:
         goal_cell = self.config["locations"][req.goal_name]
         goal = tuple(goal_cell)
         
-        # 2) Get current pose from AMCL
-        amcl = rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped)
-        # Convert to grid coordinates
-        sx = int((amcl.pose.pose.position.x - self.map_info.origin.position.x) / self.cell_size)
-        sy = int((amcl.pose.pose.position.y - self.map_info.origin.position.y) / self.cell_size)
-        
-        # Extract current yaw from quaternion
-        qx = amcl.pose.pose.orientation.x
-        qy = amcl.pose.pose.orientation.y
-        qz = amcl.pose.pose.orientation.z
-        qw = amcl.pose.pose.orientation.w
-        siny_cosp = 2 * (qw * qz + qx * qy)
-        cosy_cosp = 1 - 2 * (qy * qy + qz * qz)
-        start_yaw = np.arctan2(siny_cosp, cosy_cosp)
+        # 2) Get current pose from Gazebo
+        try:
+            model_state = self.get_model_state(model_name='turtlebot3_burger', relative_entity_name='map')
+            if not model_state.success:
+                rospy.logerr("[Planner] Failed to get robot state from Gazebo")
+                return GetPathResponse()
+                
+            # Convert to grid coordinates
+            sx = int(round((model_state.pose.position.x - self.map_info.origin.position.x) / self.cell_size))
+            sy = int(round((model_state.pose.position.y - self.map_info.origin.position.y) / self.cell_size))
+            
+            # Extract current yaw from quaternion
+            quat = [
+                model_state.pose.orientation.x,
+                model_state.pose.orientation.y,
+                model_state.pose.orientation.z,
+                model_state.pose.orientation.w
+            ]
+            _, _, start_yaw = euler_from_quaternion(quat)
+            
+            # Log the conversion for debugging
+            rospy.loginfo(f"[Planner] World pos: ({model_state.pose.position.x}, {model_state.pose.position.y}) -> Grid: ({sx}, {sy})")
+        except rospy.ServiceException as e:
+            rospy.logerr(f"[Planner] Failed to get model state: {e}")
+            return GetPathResponse()
         # Convert to grid orientation (0-3)
         start_th = int(np.round(start_yaw / (np.pi/2))) % 4
         start = (sx, sy, start_th)
@@ -82,14 +99,9 @@ class PlannerAgent:
         start_pose.header.frame_id = "map"
         start_pose.header.stamp = rospy.Time.now()
         
-        # Set position
-        start_pose.pose.position.x = self.map_info.origin.position.x + i * self.cell_size
-        start_pose.pose.position.y = self.map_info.origin.position.y + j * self.cell_size
-        start_pose.pose.position.z = 0.0
-
-        # Set orientation (cardinal directions)
-        yaw = th * np.pi/2  # Convert grid orientation to radians
-        start_pose.pose.orientation = self._yaw_to_quaternion(yaw)
+        # Set position using exact current position
+        start_pose.pose.position = model_state.pose.position
+        start_pose.pose.orientation = model_state.pose.orientation
         
         path.poses.append(start_pose)
         waypoints.append(start_pose)

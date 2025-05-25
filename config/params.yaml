@@ -5,9 +5,20 @@ warehouse_1:
   grid_width: 12
   grid_height: 12
   locations:
-    start:            [1, -5.0, 0]
+    # start:            [39, 40, 0]
     charging_station: [23, 29, 0]
     storage_area:     [59, 28, 0] 
+
+warehouse_2:
+  cell_size: 0.25
+  grid_origin_x: -6
+  grid_origin_y: -6
+  grid_width: 12
+  grid_height: 12
+  locations:
+    # start:            [24, 32, 0]
+    charging_station: [24, 24, 0]
+    storage_area:     [28, 24, 0] 
   
 turtlebot3_world:
   cell_size: 0.2
@@ -18,4 +29,4 @@ turtlebot3_world:
   locations:
     start:            [4, 8, 0]
     charging_station: [5, 15, 0]
-    storage_area:     [12, 4, 0] 
+    storage_area:     [12, 4, 0]

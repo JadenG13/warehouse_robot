@@ -31,8 +31,8 @@
     <param name="world_name" value="$(arg world_name)" />
   </node>
   
-  <!-- Executor node needs access to ~world_name -->
-  <node pkg="warehouse_robot" type="executor_agent_move_base.py" name="executor_agent" output="screen">
+  <!-- Teleport Executor node needs access to ~world_name -->
+  <node pkg="warehouse_robot" type="executor_agent_teleport.py" name="executor_agent" output="screen">
     <param name="world_name" value="$(arg world_name)" />
   </node>
 
