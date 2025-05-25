@@ -4,11 +4,12 @@ local_costmap:
 
   update_frequency: 10.0
   publish_frequency: 10.0
-  transform_tolerance: 0.5  
+  transform_tolerance: 0.1  
 
   static_map: false  
   rolling_window: true
-  width: 12
-  height: 12
+  # increase I think the local cost_map is too small
+  width: 20 
+  height: 20 
   resolution: 0.25
   

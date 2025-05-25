@@ -17,14 +17,15 @@
     
     <!-- Custom parameter overrides for better wall handling -->
     <!-- Costmap parameters -->
-    <param name="local_costmap/inflation_radius" value="0.1" />
-    <param name="global_costmap/inflation_radius" value="0.2" />
+    <param name="local_costmap/inflation_radius" value="0.0" />
+    <param name="global_costmap/inflation_radius" value="0.0" />
     
     <!-- Recovery behaviors -->
     <param name="recovery_behavior_enabled" value="true" />
     <param name="clearing_rotation_allowed" value="true" />
     <param name="conservative_reset_dist" value="0.2" />
     <param name="recovery_behaviors/conservative_reset/reset_distance" value="0.2" />
+    <param name="DWAPlannerROS/transform_tolerance" value="1.0"/>
     
     <!-- DWA parameters for tight spaces -->
     <param name="DWAPlannerROS/max_vel_theta" value="1.5" />

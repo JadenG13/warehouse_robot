@@ -128,7 +128,7 @@ class PlannerAgent:
             # Create a PoseStamped for visualization and execution
             new_pose = PoseStamped()
             new_pose.header.frame_id = "map"
-            new_pose.header.stamp = rospy.Time.now()
+            new_pose.header.stamp = rospy.Time(0)
             
             # For moves, update position
             i = i + di

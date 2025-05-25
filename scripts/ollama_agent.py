@@ -10,21 +10,21 @@ class OllamaAgent:
     def __init__(self):
         rospy.init_node('ollama_agent')
 
-        # 1) Load your map params (including locations dict)
+        #  params (including locations dict)
         self.world_name = rospy.get_param('~world_name')
         self.map_cfg    = rospy.get_param(self.world_name)
 
-        # 2) Build static task list once
+        # task list once
         self.task_list = [
             {'id': name, 'x': coords[0], 'y': coords[1]}
             for name, coords in self.map_cfg['locations'].items()
         ]
 
-        # 3) Ollama client & model choice
+        # Ollama client & model choice
         self.client = ollama.Client()
         self.model  = rospy.get_param('~model', 'llama3.2')
 
-        # 4) Publish an initial idle status so ManagerAgent will accept
+        # Publish an initial idle status so ManagerAgent will accept
         self.status_pub = rospy.Publisher('/robot_1/status',
                                           RobotStatus,
                                           queue_size=1,
@@ -35,18 +35,18 @@ class OllamaAgent:
                            battery_pct=100)
         self.status_pub.publish(idle)
 
-        # 5) State holder & subscriptions
+        # State holder & subscriptions
         self.current_pose = None
         rospy.Subscriber('/amcl_pose',
                          PoseWithCovarianceStamped,
                          self.pose_cb,
                          queue_size=1)
 
-        # 6) AssignTask service proxy
+        #AssignTask service proxy
         rospy.wait_for_service('/assign_task')
         self.assign_srv = rospy.ServiceProxy('/assign_task', AssignTask)
 
-        # 7) Poll the LLM every 100 seconds
+        #Poll the LLM every 100 seconds
         self.timer = rospy.Timer(rospy.Duration(2.0), self.decide_cb)
 
         rospy.loginfo(f"[OLLAMA] Ready in world '{self.world_name}'")
@@ -62,7 +62,7 @@ class OllamaAgent:
         if self.current_pose is None:
             return
 
-        # 1) Prompt the LLM as before…
+        # Prompt the LLM as before…
         prompt_payload = {
             'robot_pose':    self.current_pose,
             'pending_tasks': self.task_list,
@@ -78,7 +78,7 @@ class OllamaAgent:
             prompt=json.dumps(prompt_payload)
         ).response.strip()
 
-        # 2) Extract next_id via JSON or regex
+        # Extract next_id via JSON or regex
         try:
             data    = json.loads(text)
             next_id = data['next_task']
@@ -89,7 +89,7 @@ class OllamaAgent:
                 return
             next_id = m.group(1)
 
-        # 3) Assign the task
+        # Assign the task
         req = AssignTaskRequest(robot_id="robot_1",
                                 task_id=next_id,
                                 location_name=next_id)
@@ -101,12 +101,12 @@ class OllamaAgent:
         rospy.loginfo(f"[OLLAMA] Assigned {next_id}: {res.message}")
         self.busy = True
 
-        # 4) Plan via GetPath
+        # Plan via GetPath
         rospy.wait_for_service('/get_path')
         get_path = rospy.ServiceProxy('/get_path', GetPath)
         path_resp = get_path(goal_name=next_id)
 
-        # 5) Execute via ExecutePath
+        # Execute via ExecutePath
         rospy.wait_for_service('/execute_path')
         exec_path = rospy.ServiceProxy('/execute_path', ExecutePath)
         exec_resp = exec_path(
@@ -117,7 +117,7 @@ class OllamaAgent:
 
         if exec_resp.success:
             rospy.loginfo(f"[OLLAMA] Started execution of {next_id}")
-            # —— TEST PAUSE: let the robot move for 100 seconds ——
+            # —— TEST PAUSE: let the robot move for 25 now ——
             rospy.loginfo("[OLLAMA] Will re-query the LLM in 100 s…")
             rospy.Timer(rospy.Duration(25.0),
                         self.decide_cb,
