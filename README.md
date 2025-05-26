@@ -3,14 +3,14 @@
 
 ## Usage
 
+### catkin_make package
+```
+catkin_make && source ~/catkin_ws/devel/setup.sh
+```
+
 ### Launch the Grid Navigation Node
 ```
 export DISABLE_ROS1_EOL_WARNINGS=1 && roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1
-```
-
-### Test Goal Sending
-```
-rosrun warehouse_robot send_goal.py charging_station
 ```
 
 ## Requirements

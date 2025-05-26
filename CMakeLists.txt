@@ -180,15 +180,17 @@ include_directories(
 
 catkin_install_python(PROGRAMS
   scripts/grid_overlay_publisher.py
-  scripts/manager_agent.py
+  # scripts/manager_agent.py
   scripts/planner_agent.py
   scripts/validator_agent.py
   # scripts/executor_agent.py
   # scripts/executor_agent_control_toolbox.py
   # scripts/executor_agent_amcl.py
-  scripts/executor_agent_move_base.py
+  # scripts/executor_agent_move_base.py
+  scripts/executor_agent_teleport.py
   scripts/send_goal.py
-  scripts/ollama_agent.py
+  # scripts/ollama_agent.py
+  scripts/manager_combined.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

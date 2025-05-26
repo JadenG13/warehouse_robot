@@ -19,7 +19,29 @@
   </node>
 
   <!-- Manager node doesn't need private params -->
-  <node pkg="warehouse_robot" type="manager_agent.py" name="manager_agent" output="screen" />
+  <!-- <node pkg="warehouse_robot" type="manager.py" name="manager_agent" output="screen" /> -->
+
+  <!-- OLLAMA AGENT
+  <node pkg="warehouse_robot"
+        type="ollama_agent.py"
+        name="ollama_agent"
+        output="screen">
+    point it at the same world_name so it can pull the same map_cfg
+    <param name="world_name" value="$(arg world_name)"/>
+    optional: override which LLM model to use
+    <param name="model"      value="llama3.2"/>
+  </node> -->
+
+  <!-- OLLAMA AGENT -->
+  <node pkg="warehouse_robot"
+        type="manager_combined.py"
+        name="manager_agent"
+        output="screen">
+    <!-- point it at the same world_name so it can pull the same map_cfg -->
+    <param name="world_name" value="$(arg world_name)"/>
+    <!-- optional: override which LLM model to use -->
+    <param name="model"      value="llama3.2"/>
+  </node>
 
   <!-- Planner node needs access to ~world_name -->
   <node pkg="warehouse_robot" type="planner_agent.py" name="planner_agent" output="screen">
@@ -34,17 +56,6 @@
   <!-- Teleport Executor node needs access to ~world_name -->
   <node pkg="warehouse_robot" type="executor_agent_teleport.py" name="executor_agent" output="screen">
     <param name="world_name" value="$(arg world_name)" />
-  </node>
-
-    <!-- OLLAMA AGENT -->
-  <node pkg="warehouse_robot"
-        type="ollama_agent.py"
-        name="ollama_agent"
-        output="screen">
-    <!-- point it at the same world_name so it can pull the same map_cfg -->
-    <param name="world_name" value="$(arg world_name)"/>
-    <!-- optional: override which LLM model to use -->
-    <param name="model"      value="llama3.2"/>
   </node>
 
   <!-- Launch Gazebo simulation of warehouse -->
