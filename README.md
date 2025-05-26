@@ -5,7 +5,7 @@
 
 ### Launch the Grid Navigation Node
 ```
-roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1 x:=1 y:=-5
+export DISABLE_ROS1_EOL_WARNINGS=1 && roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1
 ```
 
 ### Test Goal Sending
