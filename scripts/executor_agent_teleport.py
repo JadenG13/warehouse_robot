@@ -46,6 +46,13 @@ class ExecutorAgentTeleport:
 
     def execute_callback(self, req):
         """Handle execution of a path defined by waypoints"""
+        # — publish “busy” at the very start —
+        busy_msg = RobotStatus(robot_id='robot_1',
+                               state='busy',
+                               task_id=req.task_id if hasattr(req, 'task_id') else '',
+                               battery_pct=0)
+        self.status_pub.publish(busy_msg)
+
 
         if not req.waypoints:
             rospy.logerr("[EXEC] No waypoints provided")
@@ -55,7 +62,7 @@ class ExecutorAgentTeleport:
         busy = RobotStatus(
             robot_id='robot_1',
             state='busy',
-            task_id='',
+            task_id=req.task_id,
             battery_pct=100
         )
         self.status_pub.publish(busy)

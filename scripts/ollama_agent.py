@@ -118,6 +118,7 @@ class OllamaAgent:
         rospy.wait_for_service('/execute_path')
         exec_path = rospy.ServiceProxy('/execute_path', ExecutePath)
         ok = exec_path(
+            task_id=self.current_task,
             waypoints=path_resp.waypoints,
             suggested_actions=path_resp.suggested_actions,
             descriptions=path_resp.descriptions
