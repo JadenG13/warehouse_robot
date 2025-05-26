@@ -72,7 +72,14 @@ class ExecutorAgentTeleport:
         # Print all waypoints at start for debugging
         rospy.loginfo("[EXEC] Full waypoint list:")
         for i, wp in enumerate(req.waypoints):
-            rospy.loginfo(f"[EXEC] Waypoint {i}: ({wp.pose.position.x:.2f}, {wp.pose.position.y:.2f})")
+            quat = [
+                wp.pose.orientation.x,
+                wp.pose.orientation.y,
+                wp.pose.orientation.z,
+                wp.pose.orientation.w
+            ]
+            _, _, yaw = euler_from_quaternion(quat)
+            rospy.loginfo(f"[EXEC] Waypoint {i}: ({wp.pose.position.x:.2f}, {wp.pose.position.y:.2f}), Orientation: {math.degrees(yaw):.0f}°")
 
         for i, (waypoint, action) in enumerate(zip(req.waypoints, req.suggested_actions)):
             # Get current state

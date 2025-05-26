@@ -50,9 +50,10 @@ class PlannerAgent:
 
     # 
     def handle_get_path(self, req):
-        # 1. lookup goal cell
+        # 1. lookup goal cell and orientation
         goal_cell = self.config["locations"][req.goal_name]
-        goal = tuple(goal_cell)
+        goal_orientation = self.config.get("orientations", {}).get(req.goal_name, 0)  # Default to 0 if not specified
+        goal = tuple(goal_cell + [goal_orientation])  # Add orientation to goal
         
         # 2) Get current pose from Gazebo
         try:
@@ -192,12 +193,17 @@ class PlannerAgent:
     # A* path finding returning sequence of actions
     def astar(self, start, goal):
         # A* search returning sequence of grid actions
-        # extract goal coordinates, end state heading not required for pathing
+        # Use goal position for distance heuristic, but keep orientation for final check
         goal_pos = goal[: 2]
         
         # priority queue of nodes to explore: (f-score, h-score, position, actions)
         # heuristic defined by Manhattan (taxicab) distance (admissable heuristic)
+        # plus minimum turns needed to reach goal orientation (0.5 cost per turn)
         start_h = abs(goal_pos[0] - start[0]) + abs(goal_pos[1] - start[1])
+        # Add estimated rotation cost
+        rot_diff = abs((goal[2] - start[2]) % 4)
+        rot_cost = min(rot_diff, 4 - rot_diff) * 0.5
+        start_h += rot_cost
         frontier = [(start_h, start_h, start, [])]
         # min-heap priority queue sorting on f = g + h (total cost + heuristic)
         heapq.heapify(frontier)
@@ -214,12 +220,14 @@ class PlannerAgent:
             _, _, current, actions = heapq.heappop(frontier)
             current_pos = current[:2]
             
-            # check if we've reached the goal
-            if current_pos == goal_pos:
+            # check if we've reached the goal position and orientation
+            # check if we've reached the goal position and orientation
+            if current_pos == goal_pos and current[2] == goal[2]:
                 return actions
                 
             # for each possible action
-            for act in ['F', 'B', 'L', 'R']:
+            # for act in ['F', 'B', 'L', 'R']:
+            for act in ['F', 'L', 'R']:
                 i, j, th = current
                 di, dj = 0, 0
                 new_th = th
@@ -286,6 +294,10 @@ class PlannerAgent:
                     
                     # calculate new f-score and add to frontier
                     h = abs(goal_pos[0] - new_i) + abs(goal_pos[1] - new_j)
+                    # Add rotation cost to heuristic
+                    rot_diff = abs((goal[2] - new_th) % 4)
+                    rot_cost = min(rot_diff, 4 - rot_diff) * 0.5
+                    h += rot_cost
                     f = tentative_g + h
                     new_actions = actions + [act]
                     # push into p-queue
