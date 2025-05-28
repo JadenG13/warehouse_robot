@@ -18,23 +18,9 @@
     <param name="world_name" value="$(arg world_name)" />
   </node>
 
-  <!-- Manager node doesn't need private params -->
-  <!-- <node pkg="warehouse_robot" type="manager.py" name="manager_agent" output="screen" /> -->
-
-  <!-- OLLAMA AGENT
+  <!-- Manager node -->
   <node pkg="warehouse_robot"
-        type="ollama_agent.py"
-        name="ollama_agent"
-        output="screen">
-    point it at the same world_name so it can pull the same map_cfg
-    <param name="world_name" value="$(arg world_name)"/>
-    optional: override which LLM model to use
-    <param name="model"      value="llama3.2"/>
-  </node> -->
-
-  <!-- OLLAMA AGENT -->
-  <node pkg="warehouse_robot"
-        type="manager_combined.py"
+        type="manager_agent.py"
         name="manager_agent"
         output="screen">
     <!-- point it at the same world_name so it can pull the same map_cfg -->
@@ -54,7 +40,7 @@
   </node>
   
   <!-- Teleport Executor node needs access to ~world_name -->
-  <node pkg="warehouse_robot" type="executor_agent_teleport.py" name="executor_agent" output="screen">
+  <node pkg="warehouse_robot" type="executor_agent.py" name="executor_agent" output="screen">
     <param name="world_name" value="$(arg world_name)" />
   </node>
 

@@ -35,7 +35,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  ActionStep.msg
+  RobotStatus.msg
 )
 
 ## To declare and build messages, services or actions from within this
@@ -71,6 +71,8 @@ add_service_files(
   ExecutePath.srv
   GetPath.srv
   ValidatePath.srv
+  CheckMovement.srv
+  RequestReplan.srv
 )
 
 
@@ -180,17 +182,10 @@ include_directories(
 
 catkin_install_python(PROGRAMS
   scripts/grid_overlay_publisher.py
-  # scripts/manager_agent.py
   scripts/planner_agent.py
   scripts/validator_agent.py
-  # scripts/executor_agent.py
-  # scripts/executor_agent_control_toolbox.py
-  # scripts/executor_agent_amcl.py
-  # scripts/executor_agent_move_base.py
-  scripts/executor_agent_teleport.py
-  scripts/send_goal.py
-  # scripts/ollama_agent.py
-  scripts/manager_combined.py
+  scripts/executor_agent.py
+  scripts/manager_agent.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

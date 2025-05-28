@@ -1,0 +1,11 @@
+string task_id
+geometry_msgs/Pose start_pose
+geometry_msgs/Pose goal_pose
+bool[] local_occupancy  # 3x3 grid showing obstacles
+---
+bool success
+string message
+nav_msgs/Path path
+geometry_msgs/PoseStamped[] waypoints
+string[] suggested_actions
+string[] descriptions

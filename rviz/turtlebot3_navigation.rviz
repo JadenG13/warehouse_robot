@@ -279,7 +279,7 @@ Visualization Manager:
           Topic: /move_base/DWAPlannerROS/local_plan
           Unreliable: false
           Value: true
-      Enabled: true
+      Enabled: false
       Name: Local Map
     - Alpha: 1
       Arrow Length: 0.05000000074505806
@@ -355,10 +355,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 62.170074462890625
+      Scale: 153.93081665039062
       Target Frame: <Fixed Frame>
-      X: 0
-      Y: 0
+      X: 2.0523316860198975
+      Y: 2.993548631668091
     Saved: ~
 Window Geometry:
   Displays:
@@ -378,5 +378,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1133
-  X: 461
-  Y: -11
+  X: 321
+  Y: 94
