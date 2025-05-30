@@ -3,10 +3,10 @@ import rospy
 import json
 import re
 import ollama
-from warehouse_robot.srv import AssignTask, AssignTaskResponse
+from gazebo_msgs.srv import GetModelState
 from warehouse_robot.srv import GetPath, ExecutePath, ValidatePathWithPat
 from warehouse_robot.msg import RobotStatus
-from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped, Pose, Quaternion
+from geometry_msgs.msg import PoseStamped, Pose, Quaternion
 import numpy as np
 from tf.transformations import euler_from_quaternion
 
@@ -56,13 +56,6 @@ class ManagerAgent:
         )
         self.status_pub.publish(idle)
         
-        # Subscribers
-        rospy.Subscriber(
-            '/amcl_pose',
-            PoseWithCovarianceStamped,
-            self.pose_cb,
-            queue_size=1
-        )
         rospy.Subscriber(
             '/robot_1/status',
             RobotStatus,
@@ -71,10 +64,9 @@ class ManagerAgent:
         )
         
         # Services
-        self.assign_srv = rospy.Service(
-            'assign_task',
-            AssignTask,
-            self.handle_assign
+        self.get_model_state = rospy.ServiceProxy(
+            '/gazebo/get_model_state', 
+            GetModelState
         )
         
         # Timer for task decisions
@@ -82,12 +74,6 @@ class ManagerAgent:
             rospy.Duration(2.0),
             self.decide_cb
         )
-    
-    def pose_cb(self, msg):
-        p = msg.pose.pose.position
-        q = msg.pose.pose.orientation
-        yaw = self._yaw_from_quat(q)
-        self.current_pose = {'x': p.x, 'y': p.y, 'theta': yaw}
     
     def _quat_from_yaw(self, yaw):
         """Convert yaw angle to geometry_msgs/Quaternion"""
@@ -102,6 +88,17 @@ class ManagerAgent:
         """Extract yaw angle from geometry_msgs/Quaternion"""
         euler = euler_from_quaternion([q.x, q.y, q.z, q.w])
         return euler[2]  # yaw is the third element
+    
+    def _update_current_pose(self):
+        current = self.get_model_state(
+            model_name='turtlebot3_burger',
+            relative_entity_name='map'
+        )
+        
+        p = current.pose.position
+        q = current.pose.orientation
+        yaw = self._yaw_from_quat(q)
+        self.current_pose = {'x': p.x, 'y': p.y, 'theta': yaw}
 
     def status_cb(self, msg):
         if msg.robot_id != 'robot_1':
@@ -136,6 +133,9 @@ class ManagerAgent:
         ]
     
     def decide_cb(self, _):
+        rospy.loginfo("[Manager] Deciding next task...")
+        self._update_current_pose()
+        
         if not self.current_pose or self.is_busy or not self.task_list:
             return
         
@@ -317,15 +317,6 @@ class ManagerAgent:
                 self.current_task = None
             return
             # Don't mark as complete, let status callback handle that
-    
-    def handle_assign(self, req):
-        # External task assignment handler
-        status = self.robot_status.get(req.robot_id)
-        if not status or status.state != 'idle':
-            return AssignTaskResponse(False, "Robot not available")
-        
-        rospy.loginfo(f"[Manager] External assignment: {req.task_id}@{req.location_name} to {req.robot_id}")
-        return AssignTaskResponse(True, "Task accepted")
     
     def _quat_from_yaw(self, yaw):
         """Convert yaw angle to geometry_msgs/Quaternion"""
