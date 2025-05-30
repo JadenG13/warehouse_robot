@@ -1,0 +1,273 @@
+#include <ros/ros.h>
+#include <warehouse_robot/ValidatePath.h>
+#include <warehouse_robot/ValidatePathWithPat.h>
+#include <nav_msgs/OccupancyGrid.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <tf/transform_datatypes.h>
+#include <filesystem>
+#include <memory>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+
+namespace fs = std::filesystem;
+
+class ValidatorAgent {
+private:
+    ros::NodeHandle nh_;
+    ros::Subscriber costmap_sub_;
+    ros::ServiceServer validate_pat_srv_;
+
+    nav_msgs::OccupancyGrid::ConstPtr global_costmap_;
+
+    // PAT related paths
+    std::string PAT_DIR = std::string(getenv("HOME")) + "/catkin_ws/src/warehouse_robot/pat/";
+    const fs::path TEMPLATE_PATH = PAT_DIR + "template.csp";
+    const fs::path PAT_EXE = PAT_DIR + "MONO-PAT-v3.6.0/PAT3.Console.exe";
+    const fs::path OUTPUT_FILE = PAT_DIR + "output.txt";
+    const fs::path RUN_CSP = PAT_DIR + "run.csp";
+
+    /**
+     * Convert world coordinates to grid coordinates
+     */
+    std::pair<int, int> worldToGrid(double x, double y, const nav_msgs::OccupancyGrid::ConstPtr& map) {
+        int grid_x = static_cast<int>(std::round((x - map->info.origin.position.x) / map->info.resolution));
+        int grid_y = static_cast<int>(std::round((y - map->info.origin.position.y) / map->info.resolution));
+        return {grid_x, grid_y};
+    }
+
+    /**
+     * Build CSP from template and current data
+     */
+    fs::path buildCsp(const std::vector<int>& grid, 
+                      std::pair<int, int> start_rc,
+                      std::pair<int, int> goal_rc,
+                      int M,
+                      const std::string& out_path) {
+        // Get positions
+        auto [start_c, start_r] = start_rc;
+        auto [goal_c, goal_r] = goal_rc;
+
+        // Read template text
+        std::ifstream template_file(TEMPLATE_PATH);
+        if (!template_file.is_open()) {
+            throw std::runtime_error("Could not open template file");
+        }
+
+        std::stringstream buffer;
+        buffer << template_file.rdbuf();
+        std::string template_content = buffer.str();
+
+        // Convert grid to string
+        std::stringstream grid_str;
+        grid_str << "[";
+        int row = 0;
+        int grid_width = M;  // M is the width/height of the square grid
+        for (size_t i = 0; i < grid.size(); ++i) {
+            grid_str << grid[i];
+            if (i < grid.size() - 1) {
+                grid_str << ",";
+                if ((i + 1) % grid_width == 0) {
+                    grid_str << "\n ";  // Add newline and space for alignment
+                    row++;
+                }
+            }
+        }
+        grid_str << "]";
+
+        // Replace placeholders with updated parameters
+        template_content = replace_all(template_content, "{{GRID}}", grid_str.str());
+        template_content = replace_all(template_content, "{{START_R}}", std::to_string(start_r));
+        template_content = replace_all(template_content, "{{START_C}}", std::to_string(start_c));
+        template_content = replace_all(template_content, "{{GOAL_R}}", std::to_string(goal_r));
+        template_content = replace_all(template_content, "{{GOAL_C}}", std::to_string(goal_c));
+        template_content = replace_all(template_content, "{{M}}", std::to_string(M));
+
+        // Write to output file
+        std::ofstream out_file(out_path);
+        if (!out_file.is_open()) {
+            throw std::runtime_error("Could not open output file");
+        }
+        out_file << template_content;
+        out_file.close();
+
+        return fs::path(out_path);
+    }
+
+    /**
+     * Replace all occurrences of a string
+     */
+    std::string replace_all(std::string str, const std::string& from, const std::string& to) {
+        size_t start_pos = 0;
+        while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+            str.replace(start_pos, from.length(), to);
+            start_pos += to.length();
+        }
+        return str;
+    }
+
+    /**
+     * Run PAT verification
+     */
+    bool verifyWithPat(const fs::path& csp_path) {
+        std::string command = "mono " + PAT_EXE.string() + " " + csp_path.string() + " " + OUTPUT_FILE.string();
+        int result = system(command.c_str());
+        
+        if (result != 0) {
+            ROS_ERROR("PAT verification failed");
+            return false;
+        }
+
+        // Read output file to check result
+        std::ifstream output_file(OUTPUT_FILE);
+        std::string line;
+        bool valid = true;
+
+        while (std::getline(output_file, line)) {
+            if (line.find("NOT") != std::string::npos) {
+                valid = false;
+                break;
+            }
+        }
+
+        return valid;
+    }
+
+public:
+    ValidatorAgent() : nh_("~") {
+        // Subscribe to global costmap
+        costmap_sub_ = nh_.subscribe("/move_base/global_costmap/costmap", 10, 
+            &ValidatorAgent::costmapCallback, this);
+
+        // Register services
+        validate_pat_srv_ = nh_.advertiseService("validate_path_with_pat",
+            &ValidatorAgent::handleValidatePathWithPat, this);
+
+        ROS_INFO("[Validator] Ready.");
+    }
+
+    void costmapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg) {
+        global_costmap_ = msg;
+    }
+
+    bool handleValidatePathWithPat(warehouse_robot::ValidatePathWithPat::Request &req,
+                                 warehouse_robot::ValidatePathWithPat::Response &res) {
+        ROS_INFO_STREAM("[Validator] Received request to validate path with PAT");
+        if (!global_costmap_) {
+            res.exists = false;
+            res.message = "No costmap data available";
+            return true;
+        }
+        ROS_INFO_STREAM("[Validator] Global costmap received with size: " 
+                        << global_costmap_->info.width << "x" 
+                        << global_costmap_->info.height);
+
+        try {
+            // Validate start and goal poses
+            ROS_INFO("[Validator] Validating start and goal poses...");
+            
+            // Get the costmap resolution and info
+            double resolution = global_costmap_->info.resolution;
+            int costmap_width = global_costmap_->info.width;
+            int costmap_height = global_costmap_->info.height;
+            double origin_x = global_costmap_->info.origin.position.x;
+            double origin_y = global_costmap_->info.origin.position.y;
+
+            // Convert world coords to costmap indices
+            int cells_per_meter = 1.0 / resolution;
+            
+            // Get grid coordinates for the useable area (-7,-7) to (7,7)
+            // Convert from world coordinates to grid indices
+            int min_x = static_cast<int>(std::round((-7.0 - origin_x) / resolution));
+            int max_x = static_cast<int>(std::round((7.0 - origin_x) / resolution));
+            int min_y = static_cast<int>(std::round((-7.0 - origin_y) / resolution));
+            int max_y = static_cast<int>(std::round((7.0 - origin_y) / resolution));
+
+            // Convert poses to grid coordinates
+            auto start = worldToGrid(req.start_pose.pose.position.x,
+                                   req.start_pose.pose.position.y,
+                                   global_costmap_);
+            auto goal = worldToGrid(req.goal_pose.pose.position.x,
+                                  req.goal_pose.pose.position.y,
+                                  global_costmap_);
+
+            ROS_INFO_STREAM("[Validator] Start: (" << start.first << ", " << start.second << 
+                          "), Goal: (" << goal.first << ", " << goal.second << ")");
+
+            // Create cropped grid for PAT
+            int crop_size = (max_x - min_x + 1);
+            std::vector<int> grid;
+            grid.reserve(crop_size * crop_size);
+
+            ROS_INFO_STREAM("[Validator] Cropping costmap to area: (" << min_x << ", " << min_y << 
+                          ") to (" << max_x << ", " << max_y << ")");
+
+            // Copy only the cropped area
+            for (int y = min_y; y <= max_y; y++) {
+                for (int x = min_x; x <= max_x; x++) {
+                    if (x >= 0 && x < costmap_width && y >= 0 && y < costmap_height) {
+                        int idx = y * costmap_width + x;
+                        grid.push_back(global_costmap_->data[idx] > 0 ? -1 : 1);
+                    } else {
+                        grid.push_back(-1); // Mark out of bounds as obstacles
+                    }
+                }
+            }
+            
+            ROS_INFO_STREAM("[Validator] Cropped grid size: " << crop_size << "x" << crop_size);
+
+            // Adjust start/goal coordinates to cropped grid
+            start.first -= min_x;
+            start.second -= min_y;
+            goal.first -= min_x;
+            goal.second -= min_y;
+
+            // Add debug logging
+            ROS_INFO_STREAM("[Validator] Map bounds: (" << origin_x << "," << origin_y << ") to (" 
+                          << (origin_x + costmap_width * resolution) << "," 
+                          << (origin_y + costmap_height * resolution) << ")");
+            ROS_INFO_STREAM("[Validator] Crop area: (" << min_x << "," << min_y << ") to ("
+                          << max_x << "," << max_y << ")");
+            ROS_INFO_STREAM("[Validator] Adjusted start: (" << start.first << "," << start.second 
+                          << "), goal: (" << goal.first << "," << goal.second << ")");
+
+            // Verify coordinates are in cropped grid
+            if (start.first < 0 || start.first >= crop_size ||
+                start.second < 0 || start.second >= crop_size ||
+                goal.first < 0 || goal.first >= crop_size ||
+                goal.second < 0 || goal.second >= crop_size) {
+                res.exists = false;
+                res.message = "Start or goal position outside valid area";
+                return true;
+            }
+
+            // Build CSP file with cropped grid
+            auto csp_path = buildCsp(grid, start, goal, crop_size, RUN_CSP.string());
+            ROS_INFO_STREAM("[Validator] CSP file created at: " << csp_path.string());
+
+            // Verify with PAT
+            bool path_exists = verifyWithPat(csp_path);
+            ROS_INFO_STREAM("[Validator] Path verification result: " << (path_exists ? "Exists" : "Does not exist"));
+
+            res.exists = path_exists;
+            res.message = path_exists ? "Path exists" : "No path exists";
+
+        } catch (const std::exception& e) {
+            ROS_ERROR_STREAM("[Validator] Error in PAT verification: " << e.what());
+            res.exists = false;
+            res.message = std::string("Error: ") + e.what();
+        }
+        ROS_INFO_STREAM("[Validator] Validation complete. Result: " << res.message);
+
+        return true;
+    }
+};
+
+int main(int argc, char** argv) {
+    ros::init(argc, argv, "validator_agent");
+    ROS_INFO("[Validator] Starting validator agent...");
+    ValidatorAgent validator;
+    ros::spin();
+    return 0;
+}

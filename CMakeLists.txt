@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(warehouse_robot)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+## Enable C++17 for filesystem support
+add_compile_options(-std=c++17)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -17,10 +17,11 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   nav_msgs
   message_generation
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -70,8 +71,7 @@ add_service_files(
   AssignTask.srv
   ExecutePath.srv
   GetPath.srv
-  ValidatePath.srv
-  CheckMovement.srv
+  ValidatePathWithPat.srv
   RequestReplan.srv
 )
 
@@ -170,6 +170,15 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+## Build C++ nodes
+add_executable(validator_agent src/validator_agent.cpp)
+add_dependencies(validator_agent ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(validator_agent
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  stdc++fs
+)
+
 #############
 ## Install ##
 #############
@@ -183,7 +192,6 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/grid_overlay_publisher.py
   scripts/planner_agent.py
-  scripts/validator_agent.py
   scripts/executor_agent.py
   scripts/manager_agent.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

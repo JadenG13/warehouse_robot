@@ -1,32 +1,21 @@
 warehouse_1:
   cell_size: 0.25
-  grid_origin_x: -6
-  grid_origin_y: -6
-  grid_width: 12
-  grid_height: 12
+  grid_origin_x: -7
+  grid_origin_y: -7
+  grid_width: 14
+  grid_height: 14
   locations:
-    # start:            [39, 40, 0]
+    start:            [39, 40, 0]
     charging_station: [23, 29, 0]
     storage_area:     [59, 28, 0] 
 
 warehouse_2:
   cell_size: 0.25
-  grid_origin_x: -6
-  grid_origin_y: -6
-  grid_width: 12
-  grid_height: 12
+  grid_origin_x: -7
+  grid_origin_y: -7
+  grid_width: 14
+  grid_height: 14
   locations:
-    # start:            [24, 32, 0]
-    charging_station: [24, 24, 0]
-    storage_area:     [28, 24, 0] 
-  
-turtlebot3_world:
-  cell_size: 0.2
-  grid_origin_x: -4
-  grid_origin_y: -4
-  grid_width: 8
-  grid_height: 8
-  locations:
-    start:            [4, 8, 0]
-    charging_station: [5, 15, 0]
-    storage_area:     [12, 4, 0]
+    shelf_1:          [60, 58, 0]
+    charging_station: [36, 48, 0]
+    storage_area:     [44, 21, 0] 

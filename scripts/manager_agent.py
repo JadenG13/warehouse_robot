@@ -4,9 +4,9 @@ import json
 import re
 import ollama
 from warehouse_robot.srv import AssignTask, AssignTaskResponse
-from warehouse_robot.srv import GetPath, ExecutePath
+from warehouse_robot.srv import GetPath, ExecutePath, ValidatePathWithPat
 from warehouse_robot.msg import RobotStatus
-from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Quaternion
+from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped, Pose, Quaternion
 import numpy as np
 from tf.transformations import euler_from_quaternion
 
@@ -183,11 +183,11 @@ class ManagerAgent:
         return True
     
     def _plan_and_execute(self, task_id):
-        # Get path plan
-        rospy.wait_for_service('/get_path')
-        get_path = rospy.ServiceProxy('/get_path', GetPath)
-        
-        rospy.loginfo(f"[Manager] Planning path for task {task_id}")
+        # First check if path exists using PAT verification
+        rospy.loginfo(f"[Manager] Checking path existence with PAT for task {task_id}")
+        rospy.wait_for_service('/validator_agent/validate_path_with_pat')
+        rospy.loginfo("[Manager] Waiting for validate_path_with_pat service")
+        validate_path = rospy.ServiceProxy('/validator_agent/validate_path_with_pat', ValidatePathWithPat)
         
         # Create start pose from current robot pose
         start_pose = Pose()
@@ -209,6 +209,37 @@ class ManagerAgent:
         goal_pose.position.z = 0.0
         # Set goal orientation to face east (0 degrees) by default
         goal_pose.orientation = self._quat_from_yaw(0.0)
+
+        # First check if path exists using PAT
+        start_stamped = PoseStamped()
+        start_stamped.header.frame_id = "map"
+        start_stamped.header.stamp = rospy.Time.now()
+        start_stamped.pose = start_pose
+
+        goal_stamped = PoseStamped()
+        goal_stamped.header.frame_id = "map"
+        goal_stamped.header.stamp = rospy.Time.now()
+        goal_stamped.pose = goal_pose
+
+        pat_resp = validate_path(
+            start_pose=start_stamped,
+            goal_pose=goal_stamped
+        )
+
+        if not pat_resp.exists:
+            rospy.logerr(f"[Manager] PAT verification shows no path exists for task {task_id}: {pat_resp.message}")
+            if self.current_task:
+                self.is_busy = False
+                self.current_task = None
+            return
+
+        rospy.loginfo("[Manager] PAT verification confirms path exists, proceeding with planning")
+
+        # Get path plan
+        rospy.wait_for_service('/get_path')
+        get_path = rospy.ServiceProxy('/get_path', GetPath)
+        
+        rospy.loginfo(f"[Manager] Planning path for task {task_id}")
         
         path_resp = get_path(
             start_pose=start_pose,

@@ -9,8 +9,8 @@
   <rosparam file="$(find warehouse_robot)/config/params.yaml" command="load" />
 
   <!-- Get start position from loaded parameters using param substitution -->
-  <arg name="x" default="0" />
-  <arg name="y" default="0" />
+  <arg name="x" default="-1" />
+  <arg name="y" default="-2" />
   <arg name="a" default="0" />
   
   <!-- Grid overlay with private param ~world_name -->
@@ -34,8 +34,8 @@
     <param name="world_name" value="$(arg world_name)" />
   </node>
 
-  <!-- Validator node needs access to ~world_name -->
-  <node pkg="warehouse_robot" type="validator_agent.py" name="validator_agent" output="screen">
+  <!-- Validator node (C++ version) -->
+  <node pkg="warehouse_robot" type="validator_agent" name="validator_agent" output="screen">
     <param name="world_name" value="$(arg world_name)" />
   </node>
   

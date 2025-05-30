@@ -1,0 +1,5 @@
+geometry_msgs/PoseStamped start_pose
+geometry_msgs/PoseStamped goal_pose
+---
+bool exists  # whether a path exists
+string message # success/error message

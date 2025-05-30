@@ -7,7 +7,7 @@ footprint: [[-0.105, -0.105], [-0.105, 0.105], [0.041, 0.105], [0.041, -0.105]]
 inflation_radius: 0.25
 cost_scaling_factor: 0.0
 inflation_layer:
-  enabled: true
+  enabled: false
 
 map_type: costmap
 track_unknown_space: false

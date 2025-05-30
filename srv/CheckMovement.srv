@@ -1,7 +1,0 @@
-geometry_msgs/Pose current_pose
-geometry_msgs/Pose target_pose
-string action
----
-bool success
-string message
-bool[] occupancy_grid  # 3x3 grid showing obstacles

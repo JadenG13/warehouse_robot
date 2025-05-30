@@ -23,7 +23,7 @@
     <param name="save_pose_rate"            value="50.0"/>
 
     <remap from="scan"                      to="$(arg scan_topic)"/>
-    <param name="laser_max_range"           value="30"/>
+    <param name="laser_max_range"           value="100"/>
     <param name="laser_max_beams"           value="360"/>
     <param name="laser_z_hit"               value="0.7"/>
     <param name="laser_z_short"             value="0.1"/>

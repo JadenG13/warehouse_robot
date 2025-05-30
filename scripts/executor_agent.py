@@ -3,9 +3,10 @@ import rospy
 import math
 from gazebo_msgs.msg import ModelState
 from gazebo_msgs.srv import SetModelState, GetModelState
-from warehouse_robot.srv import ExecutePath, ExecutePathResponse, CheckMovement, GetPath
+from warehouse_robot.srv import ExecutePath, ExecutePathResponse, GetPath
 from warehouse_robot.msg import RobotStatus
 from tf.transformations import euler_from_quaternion
+from nav_msgs.msg import OccupancyGrid
 
 
 class ExecutorAgent:
@@ -16,6 +17,24 @@ class ExecutorAgent:
         self.world_name = rospy.get_param("~world_name")
         self.config = rospy.get_param(self.world_name)
         self.cell_size = self.config["cell_size"]
+
+        # Costmap data
+        self.global_costmap = None
+        self.costmap_info = None
+        
+        # Subscribe to global costmap
+        self.costmap_sub = rospy.Subscriber(
+            '/move_base/global_costmap/costmap',
+            OccupancyGrid,
+            self.costmap_callback,
+            queue_size=10
+        )
+        
+        # Wait for initial costmap data
+        rospy.loginfo("[EXEC] Waiting for costmap...")
+        while self.global_costmap is None and not rospy.is_shutdown():
+            rospy.sleep(0.1)
+        rospy.loginfo("[EXEC] Got initial costmap")
 
         # Status publisher setup
         self.status_pub = rospy.Publisher(
@@ -35,10 +54,6 @@ class ExecutorAgent:
         self.get_model_state = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
         self.set_model_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState)
 
-        # Wait for movement validation service
-        rospy.wait_for_service('check_movement')
-        self.check_movement = rospy.ServiceProxy('check_movement', CheckMovement)
-
         # Wait for path planning service
         rospy.wait_for_service('/get_path')
         self.get_path = rospy.ServiceProxy('/get_path', GetPath)
@@ -46,6 +61,76 @@ class ExecutorAgent:
         # Service for path execution
         self.srv = rospy.Service('execute_path', ExecutePath, self.execute_callback)
         rospy.loginfo("[EXEC] Ready.")
+
+    def costmap_callback(self, msg):
+        """Store incoming costmap data"""
+        self.global_costmap = list(msg.data)
+        self.costmap_info = msg.info
+
+    def is_cell_blocked(self, x, y):
+        """Check if the target cell (x,y) is occupied"""
+        if not self.global_costmap or not self.costmap_info:
+            rospy.logwarn("[EXEC] No costmap data available")
+            return True
+
+        if (0 <= x < self.costmap_info.width and 
+            0 <= y < self.costmap_info.height):
+            idx = y * self.costmap_info.width + x
+            if idx < 0 or idx >= len(self.global_costmap):
+                rospy.logwarn(f"[EXEC] Invalid index {idx} for costmap at ({x}, {y})")
+                return True
+            cost = self.global_costmap[idx]
+            if cost > 0:  # ROS costmaps typically use 0-100 range, with >= 50 being obstacles
+                rospy.loginfo(f"[EXEC] Detected obstacle at ({x}, {y}) with cost {cost}")
+                return True
+        else:
+            # Treat out-of-bounds as occupied for safety
+            rospy.loginfo(f"[EXEC] Cell ({x}, {y}) is out of bounds")
+            return True
+        return False
+
+    def check_position_safety(self, target_pose):
+        """Check if a target pose is safe to move to"""
+        if not self.global_costmap or not self.costmap_info:
+            return False, "No costmap data available"
+
+        try:
+            # Convert world coordinates to grid coordinates
+            target_x = int(round((target_pose.position.x - self.costmap_info.origin.position.x) / self.cell_size))
+            target_y = int(round((target_pose.position.y - self.costmap_info.origin.position.y) / self.cell_size))
+            
+            rospy.loginfo(f"[EXEC] Checking safety of position ({target_x}, {target_y})")
+
+            # Check if target position is blocked
+            if self.is_cell_blocked(target_x, target_y):
+                return False, "Target position is blocked by an obstacle"
+
+            # Get local occupancy grid around target
+            map_section = []
+            for dy in range(-1, 2):
+                row = []
+                for dx in range(-1, 2):
+                    x, y = target_x + dx, target_y + dy
+                    if (0 <= x < self.costmap_info.width and 
+                        0 <= y < self.costmap_info.height):
+                        idx = y * self.costmap_info.width + x
+                        value = self.global_costmap[idx]
+                        # row.append(' X ' if value > 0 else ' _ ')
+                        row.append(f' {value} ')
+                    else:
+                        row.append(' ? ')
+                map_section.append(row)
+            
+            # Print the 3x3 grid around target
+            rospy.loginfo("Local map section around target (3x3 grid):")
+            for row in map_section:
+                rospy.loginfo(' '.join(row))
+
+            return True, "Position is safe"
+
+        except Exception as e:
+            rospy.logerr(f"[EXEC] Error checking position safety: {str(e)}")
+            return False, f"Error checking position: {str(e)}"
 
     def execute_callback(self, req):
         """Handle execution of a path defined by waypoints"""
@@ -94,15 +179,11 @@ class ExecutorAgent:
             if i < len(req.descriptions) and req.descriptions[i]:
                 rospy.loginfo(f"[EXEC] Description: {req.descriptions[i]}")
 
-            # Check movement safety
-            check_result = self.check_movement(
-                current_pose=current.pose,
-                target_pose=waypoint.pose,
-                action=action
-            )
+            # Check next target position
+            is_safe, message = self.check_position_safety(waypoint.pose)
 
-            if not check_result.success:
-                rospy.logwarn(f"[EXEC] Movement validation failed: {check_result.message}")
+            if not is_safe:
+                rospy.logwarn(f"[EXEC] Movement validation failed: {message}")
                 
                 # Request a replan by calling get_path with current position
                 rospy.loginfo("[EXEC] Requesting new path")
@@ -112,12 +193,10 @@ class ExecutorAgent:
                 )
                 
                 if replan_result.waypoints:
-                    # Don't return failure - the manager will get a new path and try again
                     rospy.loginfo("[EXEC] New path received, awaiting execution")
                     return ExecutePathResponse(success=True)
                 else:
                     rospy.logerr("[EXEC] Failed to get new path")
-                    # Return failure if path planning failed
                     return ExecutePathResponse(success=False)
 
             rospy.loginfo("[EXEC] Movement validated as safe")
