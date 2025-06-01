@@ -1,0 +1,7 @@
+RUN COMMAND:
+
+rostopic echo /rosout_agg | grep "\[PERF_LOG\]" | sed 's/.*msg: "//;s/"}//' > performance_only.log
+
+
+
+IT CAN BE A BIT FUCKING RETARDED SO DO CHECK AGAINST THE ACTUAL LOGS TO MAKE SURE IT HAS EVERYTHING

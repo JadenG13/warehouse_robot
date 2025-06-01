@@ -1,0 +1,881 @@
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=0.000, robot_id=robot_1,\
+[PERF_LOG] event=EXECUTOR_FIRST_COSTMAP_DATA_RECEIVED, timestamp=2.352, width=128,\
+[PERF_LOG] event=PLANNER_FIRST_COSTMAP_DATA_RECEIVED, timestamp=2.352, width=128,\
+[PERF_LOG] event=EXECUTOR_CONFIG_CELL_SIZE, timestamp=2.354, conceptual_cell_size=0.250"
+[PERF_LOG] event=PLANNER_COSTMAP_READY, timestamp=2.361, wait_duration_sec=3.339"
+[PERF_LOG] event=EXECUTOR_COSTMAP_READY, timestamp=2.393, wait_duration_sec=3.342"
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=2.394, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=2.422, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=2.916"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=2.921, duration_sec=0.0029,\
+[PERF_LOG] event=MANAGER_LLM_REQUEST_SENT, timestamp=2.923, robot_pose=x:-1.00_y:-2.00_th:0,\
+[PERF_LOG] event=MANAGER_LLM_RESPONSE_RECEIVED, timestamp=3.028, duration_sec=0.105,\
+[PERF_LOG] event=MANAGER_LLM_SUGGESTED_TASK, timestamp=3.030, task_id='storage_area'"
+[PERF_LOG] event=MANAGER_TASK_ASSIGNED, timestamp=3.031, task_id='storage_area'"
+[PERF_LOG] event=MANAGER_PLAN_EXEC_START, timestamp=3.034, task_id='storage_area'"
+[PERF_LOG] event=MANAGER_PAT_SERVICE_WAIT_END, timestamp=3.037, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PAT_REQUEST_SENT, timestamp=3.039, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_PAT_RESPONSE_RECEIVED, timestamp=7.045, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_PLANNER_SERVICE_WAIT_END, timestamp=7.047, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PLANNER_REQUEST_SENT, timestamp=7.047, task_id='storage_area',\
+[PERF_LOG] event=PLANNER_GET_PATH_REQUEST_RECEIVED, timestamp=7.051, start_pose=x:-1.00_y:-2.00_th:0,\
+[PERF_LOG] event=PLANNER_ASTAR_CALL_END, timestamp=7.054, astar_duration_sec=0.0027,\
+[PERF_LOG] event=PLANNER_GET_PATH_SUCCESS, timestamp=7.060, planning_duration_sec=0.009,\
+[PERF_LOG] event=MANAGER_PLANNER_RESPONSE_RECEIVED, timestamp=7.063, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_EXECUTOR_SERVICE_WAIT_END, timestamp=7.067, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_EXECUTOR_REQUEST_SENT, timestamp=7.071, task_id='storage_area',\
+[PERF_LOG] event=EXEC_PATH_REQUEST_RECEIVED, timestamp=7.073, task_id='storage_area',\
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=7.076, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=7.077, robot_id=robot_1,\
+[PERF_LOG] event=EXEC_GET_MODEL_STATE_INITIAL_CALL, timestamp=7.117, duration_sec=0.0031,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=7.117, task_id='storage_area', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=7.122, target_world_pose=x:-1.00_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=7.123, world_x=-1.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=7.126, duration_sec=0.0040, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=7.334, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=7.536, task_id='storage_area', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=7.537, task_id='storage_area', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=7.543, target_world_pose=x:-0.75_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=7.544, world_x=-0.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=7.548, duration_sec=0.0045, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=7.757, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=7.958, task_id='storage_area', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=7.959, task_id='storage_area', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=7.963, target_world_pose=x:-0.50_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=7.963, world_x=-0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=7.968, duration_sec=0.0049, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=8.177, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=8.377, task_id='storage_area', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=8.378, task_id='storage_area', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=8.382, target_world_pose=x:-0.25_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=8.383, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=8.386, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=8.599, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=8.800, task_id='storage_area', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=8.801, task_id='storage_area', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=8.806, target_world_pose=x:0.00_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=8.807, world_x=0.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=8.811, duration_sec=0.0043, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=9.022, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=9.224, task_id='storage_area', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=9.225, task_id='storage_area', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=9.228, target_world_pose=x:0.25_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=9.228, world_x=0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=9.233, duration_sec=0.0045, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=9.442, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=9.644, task_id='storage_area', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=9.644, task_id='storage_area', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=9.649, target_world_pose=x:0.50_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=9.650, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=9.655, duration_sec=0.0062, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=9.867, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=10.068, task_id='storage_area', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=10.069, task_id='storage_area', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=10.069, target_world_pose=x:0.50_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=10.070, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=10.075, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=10.286, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=10.487, task_id='storage_area', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=10.488, task_id='storage_area', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=10.491, target_world_pose=x:0.50_y:-2.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=10.492, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=10.498, duration_sec=0.0078, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=10.710, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=10.911, task_id='storage_area', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=10.912, task_id='storage_area', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=10.916, target_world_pose=x:0.50_y:-2.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=10.917, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=10.923, duration_sec=0.0061, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=11.135, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=11.335, task_id='storage_area', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=11.336, task_id='storage_area', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=11.341, target_world_pose=x:0.50_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=11.342, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=11.347, duration_sec=0.0059, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=11.557, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=11.757, task_id='storage_area', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=11.757, task_id='storage_area', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=11.761, target_world_pose=x:0.50_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=11.762, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=11.766, duration_sec=0.0047, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=11.976, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=12.177, task_id='storage_area', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=12.177, task_id='storage_area', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=12.182, target_world_pose=x:0.50_y:-3.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=12.183, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=12.188, duration_sec=0.0060, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=12.401, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=12.602, task_id='storage_area', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=12.603, task_id='storage_area', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=12.607, target_world_pose=x:0.50_y:-3.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=12.608, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=12.614, duration_sec=0.0063, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=12.824, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=13.027, task_id='storage_area', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=13.028, task_id='storage_area', waypoint_idx=14,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=13.033, target_world_pose=x:0.50_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=13.034, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=13.039, duration_sec=0.0058, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=13.253, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=13.454, task_id='storage_area', waypoint_idx=14,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=13.455, task_id='storage_area', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=13.458, target_world_pose=x:0.50_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=13.458, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=13.462, duration_sec=0.0043, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=13.671, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=13.872, task_id='storage_area', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=13.873, task_id='storage_area', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=13.877, target_world_pose=x:0.50_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=13.878, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=13.885, duration_sec=0.0070, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=14.093, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=14.296, task_id='storage_area', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=14.298, task_id='storage_area', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=14.303, target_world_pose=x:0.75_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=14.303, world_x=0.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=14.307, duration_sec=0.0047, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=14.520, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=14.721, task_id='storage_area', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=14.722, task_id='storage_area', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=14.726, target_world_pose=x:1.00_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=14.727, world_x=1.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=14.731, duration_sec=0.0051, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=14.943, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=15.144, task_id='storage_area', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=15.147, task_id='storage_area', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=15.152, target_world_pose=x:1.25_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=15.153, world_x=1.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=15.159, duration_sec=0.0069, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=15.371, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=15.572, task_id='storage_area', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=15.572, task_id='storage_area', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=15.578, target_world_pose=x:1.50_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=15.579, world_x=1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=15.583, duration_sec=0.0053, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=15.794, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=15.994, task_id='storage_area', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=15.996, task_id='storage_area', waypoint_idx=21,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=16.002, target_world_pose=x:1.75_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=16.003, world_x=1.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=16.004, duration_sec=0.0027, is_safe=False,\
+[PERF_LOG] event=EXEC_REPLAN_TRIGGERED, timestamp=16.006, task_id='storage_area',\
+[PERF_LOG] event=PLANNER_GET_PATH_REQUEST_RECEIVED, timestamp=16.009, start_pose=x:1.50_y:-4.00_th:0,\
+[PERF_LOG] event=PLANNER_ASTAR_CALL_END, timestamp=16.011, astar_duration_sec=0.0001,\
+[PERF_LOG] event=PLANNER_GET_PATH_SUCCESS, timestamp=16.013, planning_duration_sec=0.004,\
+[PERF_LOG] event=EXEC_REPLAN_GET_PATH_CALL_END, timestamp=16.015, task_id='storage_area',\
+[PERF_LOG] event=EXEC_PATH_SUCCESS_REPLAN_INITIATED, timestamp=16.016, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_EXECUTOR_RESPONSE_RECEIVED, timestamp=16.017, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_EXEC_SUCCESS_AWAIT_STATUS_OR_REPLAN, timestamp=16.020, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_DECIDE_CB_END, timestamp=16.021, total_duration_sec=13.105"
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=16.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=16.024, duration_sec=0.0019,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=16.025"
+[PERF_LOG] event=MANAGER_PLAN_EXEC_START, timestamp=17.021, task_id='storage_area'"
+[PERF_LOG] event=MANAGER_PAT_SERVICE_WAIT_END, timestamp=17.026, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PAT_REQUEST_SENT, timestamp=17.027, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=18.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=18.028, duration_sec=0.0041,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=18.030"
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=20.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=20.025, duration_sec=0.0022,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=20.026"
+[PERF_LOG] event=MANAGER_PAT_RESPONSE_RECEIVED, timestamp=20.465, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_PLANNER_SERVICE_WAIT_END, timestamp=20.468, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PLANNER_REQUEST_SENT, timestamp=20.470, task_id='storage_area',\
+[PERF_LOG] event=PLANNER_GET_PATH_REQUEST_RECEIVED, timestamp=20.472, start_pose=x:1.50_y:-4.00_th:-0,\
+[PERF_LOG] event=PLANNER_ASTAR_CALL_END, timestamp=20.476, astar_duration_sec=0.0002,\
+[PERF_LOG] event=PLANNER_GET_PATH_SUCCESS, timestamp=20.480, planning_duration_sec=0.008,\
+[PERF_LOG] event=MANAGER_PLANNER_RESPONSE_RECEIVED, timestamp=20.481, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_EXECUTOR_SERVICE_WAIT_END, timestamp=20.485, duration_sec=0.002"
+[PERF_LOG] event=MANAGER_EXECUTOR_REQUEST_SENT, timestamp=20.488, task_id='storage_area',\
+[PERF_LOG] event=EXEC_PATH_REQUEST_RECEIVED, timestamp=20.492, task_id='storage_area',\
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=20.494, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=20.495, robot_id=robot_1,\
+[PERF_LOG] event=EXEC_GET_MODEL_STATE_INITIAL_CALL, timestamp=20.520, duration_sec=0.0017,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=20.521, task_id='storage_area', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=20.524, target_world_pose=x:1.50_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=20.525, world_x=1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=20.529, duration_sec=0.0043, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=20.738, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=20.938, task_id='storage_area', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=20.938, task_id='storage_area', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=20.942, target_world_pose=x:1.50_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=20.943, world_x=1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=20.947, duration_sec=0.0053, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=21.158, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=21.358, task_id='storage_area', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=21.359, task_id='storage_area', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=21.362, target_world_pose=x:1.50_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=21.362, world_x=1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=21.366, duration_sec=0.0042, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=21.580, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=21.781, task_id='storage_area', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=21.782, task_id='storage_area', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=21.787, target_world_pose=x:1.50_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=21.788, world_x=1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=21.792, duration_sec=0.0048, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=22.004, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=22.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=22.025, duration_sec=0.0019,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=22.026"
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=22.204, task_id='storage_area', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=22.204, task_id='storage_area', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=22.207, target_world_pose=x:1.75_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=22.208, world_x=1.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=22.212, duration_sec=0.0049, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=22.422, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=22.623, task_id='storage_area', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=22.624, task_id='storage_area', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=22.630, target_world_pose=x:2.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=22.632, world_x=2.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=22.637, duration_sec=0.0071, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=22.850, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=23.051, task_id='storage_area', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=23.052, task_id='storage_area', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=23.056, target_world_pose=x:2.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=23.058, world_x=2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=23.062, duration_sec=0.0055, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=23.272, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=23.473, task_id='storage_area', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=23.474, task_id='storage_area', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=23.478, target_world_pose=x:2.50_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=23.479, world_x=2.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=23.485, duration_sec=0.0099, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=23.697, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=23.898, task_id='storage_area', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=23.899, task_id='storage_area', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=23.902, target_world_pose=x:2.75_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=23.903, world_x=2.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=23.907, duration_sec=0.0043, is_safe=True,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=24.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=24.025, duration_sec=0.0022,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=24.026"
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=24.116, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=24.317, task_id='storage_area', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=24.318, task_id='storage_area', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=24.322, target_world_pose=x:3.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=24.323, world_x=3.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=24.327, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=24.541, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=24.742, task_id='storage_area', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=24.744, task_id='storage_area', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=24.748, target_world_pose=x:3.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=24.749, world_x=3.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=24.753, duration_sec=0.0044, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=24.963, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=25.165, task_id='storage_area', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=25.166, task_id='storage_area', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=25.170, target_world_pose=x:3.50_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=25.171, world_x=3.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=25.176, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=25.386, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=25.587, task_id='storage_area', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=25.588, task_id='storage_area', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=25.595, target_world_pose=x:3.75_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=25.596, world_x=3.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=25.602, duration_sec=0.0075, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=25.814, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=26.015, task_id='storage_area', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=26.016, task_id='storage_area', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=26.018, target_world_pose=x:4.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=26.020, world_x=4.00,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=26.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=26.028, duration_sec=0.0044,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=26.029, duration_sec=0.0105, is_safe=True,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=26.030"
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=26.242, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=26.443, task_id='storage_area', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=26.443, task_id='storage_area', waypoint_idx=14,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=26.449, target_world_pose=x:4.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=26.450, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=26.454, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=26.664, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=26.865, task_id='storage_area', waypoint_idx=14,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=26.866, task_id='storage_area', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=26.869, target_world_pose=x:4.00_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=26.870, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=26.876, duration_sec=0.0064, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=27.086, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=27.287, task_id='storage_area', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=27.288, task_id='storage_area', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=27.292, target_world_pose=x:4.00_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=27.293, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=27.299, duration_sec=0.0067, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=27.510, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=27.710, task_id='storage_area', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=27.711, task_id='storage_area', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=27.715, target_world_pose=x:4.00_y:-3.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=27.716, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=27.719, duration_sec=0.0039, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=27.931, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=28.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=28.026, duration_sec=0.0031,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=28.027"
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=28.132, task_id='storage_area', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=28.133, task_id='storage_area', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=28.137, target_world_pose=x:4.00_y:-3.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=28.138, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=28.145, duration_sec=0.0089, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=28.357, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=28.558, task_id='storage_area', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=28.558, task_id='storage_area', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=28.564, target_world_pose=x:4.00_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=28.564, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=28.569, duration_sec=0.0051, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=28.780, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=28.981, task_id='storage_area', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=28.981, task_id='storage_area', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=28.988, target_world_pose=x:4.00_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=28.990, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=28.994, duration_sec=0.0053, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=29.204, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=29.405, task_id='storage_area', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=29.405, task_id='storage_area', waypoint_idx=21,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=29.409, target_world_pose=x:4.25_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=29.410, world_x=4.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=29.414, duration_sec=0.0049, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=29.623, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=29.824, task_id='storage_area', waypoint_idx=21,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=29.825, task_id='storage_area', waypoint_idx=22,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=29.831, target_world_pose=x:4.50_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=29.832, world_x=4.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=29.837, duration_sec=0.0059, is_safe=True,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=30.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=30.025, duration_sec=0.0020,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=30.025"
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=30.051, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=30.252, task_id='storage_area', waypoint_idx=22,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=30.253, task_id='storage_area', waypoint_idx=23,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=30.258, target_world_pose=x:4.75_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=30.258, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=30.261, duration_sec=0.0036, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=30.470, task_id='storage_area',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=30.671, task_id='storage_area', waypoint_idx=23,\
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=30.676, robot_id=robot_1,\
+[PERF_LOG] event=EXEC_PATH_SUCCESS_COMPLETE, timestamp=30.677, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=30.676, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_EXECUTOR_RESPONSE_RECEIVED, timestamp=30.679, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_TASK_COMPLETED_VIA_STATUS, timestamp=30.676, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_TASK_REMOVED, timestamp=30.684, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_TASK_COMPLETED_POST_EXEC_SUCCESS, timestamp=30.685, task_id='storage_area'"
+[PERF_LOG] event=MANAGER_TASK_REMOVE_ATTEMPT_NO_CHANGE, timestamp=30.687, task_id='storage_area',\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=32.021"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=32.028, duration_sec=0.0027,\
+[PERF_LOG] event=MANAGER_LLM_REQUEST_SENT, timestamp=32.029, robot_pose=x:4.75_y:-3.00_th:0,\
+[PERF_LOG] event=MANAGER_LLM_RESPONSE_RECEIVED, timestamp=32.147, duration_sec=0.115,\
+[PERF_LOG] event=MANAGER_LLM_SUGGESTED_TASK, timestamp=32.149, task_id='start'"
+[PERF_LOG] event=MANAGER_TASK_ASSIGNED, timestamp=32.151, task_id='start'"
+[PERF_LOG] event=MANAGER_PLAN_EXEC_START, timestamp=32.154, task_id='start'"
+[PERF_LOG] event=MANAGER_PAT_SERVICE_WAIT_END, timestamp=32.157, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PAT_REQUEST_SENT, timestamp=32.158, task_id='start', start_pose=x:4.75_y:-3.00_th:0,\
+[PERF_LOG] event=MANAGER_PAT_RESPONSE_RECEIVED, timestamp=34.415, task_id='start',\
+[PERF_LOG] event=MANAGER_PLANNER_SERVICE_WAIT_END, timestamp=34.420, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PLANNER_REQUEST_SENT, timestamp=34.421, task_id='start',\
+[PERF_LOG] event=PLANNER_GET_PATH_REQUEST_RECEIVED, timestamp=34.424, start_pose=x:4.75_y:-3.00_th:0,\
+[PERF_LOG] event=PLANNER_ASTAR_CALL_END, timestamp=34.427, astar_duration_sec=0.0028,\
+[PERF_LOG] event=PLANNER_GET_PATH_SUCCESS, timestamp=34.432, planning_duration_sec=0.008,\
+[PERF_LOG] event=MANAGER_PLANNER_RESPONSE_RECEIVED, timestamp=34.434, task_id='start',\
+[PERF_LOG] event=MANAGER_EXECUTOR_SERVICE_WAIT_END, timestamp=34.438, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_EXECUTOR_REQUEST_SENT, timestamp=34.440, task_id='start',\
+[PERF_LOG] event=EXEC_PATH_REQUEST_RECEIVED, timestamp=34.442, task_id='start', num_waypoints=49"
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=34.445, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=34.445, robot_id=robot_1,\
+[PERF_LOG] event=EXEC_GET_MODEL_STATE_INITIAL_CALL, timestamp=34.496, duration_sec=0.0021,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=34.497, task_id='start', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=34.502, target_world_pose=x:4.75_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=34.503, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=34.508, duration_sec=0.0059, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=34.718, task_id='start', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=34.919, task_id='start', waypoint_idx=0,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=34.920, task_id='start', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=34.924, target_world_pose=x:4.75_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=34.925, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=34.928, duration_sec=0.0041, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=35.139, task_id='start', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=35.339, task_id='start', waypoint_idx=1,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=35.340, task_id='start', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=35.344, target_world_pose=x:4.75_y:-3.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=35.345, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=35.349, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=35.560, task_id='start', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=35.761, task_id='start', waypoint_idx=2,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=35.762, task_id='start', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=35.767, target_world_pose=x:4.75_y:-3.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=35.768, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=35.771, duration_sec=0.0038, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=35.981, task_id='start', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=36.183, task_id='start', waypoint_idx=3,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=36.184, task_id='start', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=36.189, target_world_pose=x:4.75_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=36.190, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=36.195, duration_sec=0.0060, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=36.408, task_id='start', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=36.609, task_id='start', waypoint_idx=4,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=36.610, task_id='start', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=36.615, target_world_pose=x:4.75_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=36.616, world_x=4.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=36.620, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=36.832, task_id='start', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=37.032, task_id='start', waypoint_idx=5,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=37.033, task_id='start', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=37.037, target_world_pose=x:4.50_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=37.038, world_x=4.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=37.041, duration_sec=0.0038, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=37.250, task_id='start', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=37.451, task_id='start', waypoint_idx=6,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=37.452, task_id='start', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=37.455, target_world_pose=x:4.25_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=37.456, world_x=4.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=37.460, duration_sec=0.0043, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=37.670, task_id='start', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=37.870, task_id='start', waypoint_idx=7,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=37.871, task_id='start', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=37.874, target_world_pose=x:4.00_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=37.875, world_x=4.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=37.879, duration_sec=0.0047, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=38.091, task_id='start', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=38.292, task_id='start', waypoint_idx=8,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=38.292, task_id='start', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=38.299, target_world_pose=x:3.75_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=38.299, world_x=3.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=38.305, duration_sec=0.0067, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=38.518, task_id='start', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=38.719, task_id='start', waypoint_idx=9,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=38.720, task_id='start', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=38.724, target_world_pose=x:3.50_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=38.725, world_x=3.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=38.729, duration_sec=0.0048, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=38.938, task_id='start', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=39.139, task_id='start', waypoint_idx=10,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=39.140, task_id='start', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=39.143, target_world_pose=x:3.25_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=39.143, world_x=3.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=39.147, duration_sec=0.0042, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=39.357, task_id='start', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=39.557, task_id='start', waypoint_idx=11,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=39.558, task_id='start', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=39.563, target_world_pose=x:3.00_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=39.564, world_x=3.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=39.569, duration_sec=0.0055, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=39.780, task_id='start', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=39.981, task_id='start', waypoint_idx=12,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=39.982, task_id='start', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=39.986, target_world_pose=x:2.75_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=39.988, world_x=2.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=39.991, duration_sec=0.0051, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=40.204, task_id='start', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=40.405, task_id='start', waypoint_idx=13,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=40.406, task_id='start', waypoint_idx=14,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=40.409, target_world_pose=x:2.50_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=40.410, world_x=2.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=40.415, duration_sec=0.0055, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=40.625, task_id='start', waypoint_idx=14,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=40.686"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=40.691, duration_sec=0.0025,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=40.692"
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=40.826, task_id='start', waypoint_idx=14,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=40.827, task_id='start', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=40.830, target_world_pose=x:2.25_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=40.831, world_x=2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=40.835, duration_sec=0.0044, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=41.048, task_id='start', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=41.249, task_id='start', waypoint_idx=15,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=41.251, task_id='start', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=41.256, target_world_pose=x:2.25_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=41.257, world_x=2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=41.262, duration_sec=0.0060, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=41.471, task_id='start', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=41.672, task_id='start', waypoint_idx=16,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=41.673, task_id='start', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=41.676, target_world_pose=x:2.25_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=41.677, world_x=2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=41.681, duration_sec=0.0051, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=41.893, task_id='start', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=42.094, task_id='start', waypoint_idx=17,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=42.095, task_id='start', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=42.100, target_world_pose=x:2.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=42.100, world_x=2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=42.104, duration_sec=0.0042, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=42.313, task_id='start', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=42.514, task_id='start', waypoint_idx=18,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=42.514, task_id='start', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=42.519, target_world_pose=x:2.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=42.520, world_x=2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=42.524, duration_sec=0.0045, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=42.738, task_id='start', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=42.940, task_id='start', waypoint_idx=19,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=42.941, task_id='start', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=42.947, target_world_pose=x:2.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=42.948, world_x=2.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=42.954, duration_sec=0.0071, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=43.172, task_id='start', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=43.373, task_id='start', waypoint_idx=20,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=43.374, task_id='start', waypoint_idx=21,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=43.379, target_world_pose=x:1.75_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=43.381, world_x=1.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=43.385, duration_sec=0.0061, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=43.596, task_id='start', waypoint_idx=21,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=43.797, task_id='start', waypoint_idx=21,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=43.798, task_id='start', waypoint_idx=22,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=43.801, target_world_pose=x:1.50_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=43.802, world_x=1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=43.805, duration_sec=0.0037, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=44.013, task_id='start', waypoint_idx=22,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=44.215, task_id='start', waypoint_idx=22,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=44.217, task_id='start', waypoint_idx=23,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=44.219, target_world_pose=x:1.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=44.219, world_x=1.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=44.224, duration_sec=0.0044, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=44.438, task_id='start', waypoint_idx=23,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=44.639, task_id='start', waypoint_idx=23,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=44.640, task_id='start', waypoint_idx=24,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=44.644, target_world_pose=x:1.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=44.646, world_x=1.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=44.651, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=44.861, task_id='start', waypoint_idx=24,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=45.062, task_id='start', waypoint_idx=24,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=45.064, task_id='start', waypoint_idx=25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=45.068, target_world_pose=x:0.75_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=45.069, world_x=0.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=45.075, duration_sec=0.0065, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=45.286, task_id='start', waypoint_idx=25,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=45.487, task_id='start', waypoint_idx=25,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=45.488, task_id='start', waypoint_idx=26,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=45.492, target_world_pose=x:0.50_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=45.492, world_x=0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=45.495, duration_sec=0.0034, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=45.704, task_id='start', waypoint_idx=26,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=45.905, task_id='start', waypoint_idx=26,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=45.905, task_id='start', waypoint_idx=27,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=45.909, target_world_pose=x:0.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=45.911, world_x=0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=45.915, duration_sec=0.0053, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=46.125, task_id='start', waypoint_idx=27,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=46.326, task_id='start', waypoint_idx=27,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=46.326, task_id='start', waypoint_idx=28,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=46.332, target_world_pose=x:0.00_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=46.333, world_x=0.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=46.338, duration_sec=0.0053, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=46.550, task_id='start', waypoint_idx=28,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=46.750, task_id='start', waypoint_idx=28,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=46.751, task_id='start', waypoint_idx=29,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=46.756, target_world_pose=x:-0.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=46.757, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=46.763, duration_sec=0.0066, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=46.973, task_id='start', waypoint_idx=29,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=47.173, task_id='start', waypoint_idx=29,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=47.174, task_id='start', waypoint_idx=30,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=47.177, target_world_pose=x:-0.25_y:-4.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=47.179, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=47.185, duration_sec=0.0076, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=47.394, task_id='start', waypoint_idx=30,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=47.595, task_id='start', waypoint_idx=30,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=47.597, task_id='start', waypoint_idx=31,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=47.600, target_world_pose=x:-0.25_y:-4.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=47.601, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=47.605, duration_sec=0.0041, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=47.815, task_id='start', waypoint_idx=31,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=48.016, task_id='start', waypoint_idx=31,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=48.016, task_id='start', waypoint_idx=32,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=48.021, target_world_pose=x:-0.25_y:-3.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=48.022, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=48.024, duration_sec=0.0059, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=48.238, task_id='start', waypoint_idx=32,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=48.439, task_id='start', waypoint_idx=32,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=48.440, task_id='start', waypoint_idx=33,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=48.444, target_world_pose=x:-0.25_y:-3.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=48.445, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=48.449, duration_sec=0.0049, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=48.659, task_id='start', waypoint_idx=33,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=48.860, task_id='start', waypoint_idx=33,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=48.861, task_id='start', waypoint_idx=34,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=48.868, target_world_pose=x:-0.25_y:-3.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=48.869, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=48.874, duration_sec=0.0061, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=49.087, task_id='start', waypoint_idx=34,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=49.288, task_id='start', waypoint_idx=34,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=49.289, task_id='start', waypoint_idx=35,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=49.292, target_world_pose=x:-0.25_y:-3.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=49.292, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=49.296, duration_sec=0.0040, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=49.510, task_id='start', waypoint_idx=35,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=49.712, task_id='start', waypoint_idx=35,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=49.713, task_id='start', waypoint_idx=36,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=49.718, target_world_pose=x:-0.25_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=49.719, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=49.724, duration_sec=0.0056, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=49.936, task_id='start', waypoint_idx=36,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=50.137, task_id='start', waypoint_idx=36,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=50.137, task_id='start', waypoint_idx=37,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=50.141, target_world_pose=x:-0.25_y:-2.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=50.142, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=50.146, duration_sec=0.0050, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=50.358, task_id='start', waypoint_idx=37,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=50.559, task_id='start', waypoint_idx=37,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=50.560, task_id='start', waypoint_idx=38,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=50.563, target_world_pose=x:-0.25_y:-2.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=50.563, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=50.569, duration_sec=0.0065, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=50.781, task_id='start', waypoint_idx=38,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=50.982, task_id='start', waypoint_idx=38,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=50.983, task_id='start', waypoint_idx=39,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=50.988, target_world_pose=x:-0.25_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=50.989, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=50.994, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=51.210, task_id='start', waypoint_idx=39,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=51.410, task_id='start', waypoint_idx=39,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=51.410, task_id='start', waypoint_idx=40,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=51.413, target_world_pose=x:-0.25_y:-1.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=51.415, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=51.420, duration_sec=0.0070, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=51.633, task_id='start', waypoint_idx=40,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=51.833, task_id='start', waypoint_idx=40,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=51.833, task_id='start', waypoint_idx=41,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=51.838, target_world_pose=x:-0.25_y:-1.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=51.840, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=51.844, duration_sec=0.0050, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=52.053, task_id='start', waypoint_idx=41,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=52.254, task_id='start', waypoint_idx=41,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=52.254, task_id='start', waypoint_idx=42,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=52.260, target_world_pose=x:-0.25_y:-1.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=52.260, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=52.266, duration_sec=0.0062, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=52.481, task_id='start', waypoint_idx=42,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=52.682, task_id='start', waypoint_idx=42,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=52.683, task_id='start', waypoint_idx=43,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=52.687, target_world_pose=x:-0.25_y:-1.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=52.688, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=52.691, duration_sec=0.0037, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=52.899, task_id='start', waypoint_idx=43,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=53.099, task_id='start', waypoint_idx=43,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=53.100, task_id='start', waypoint_idx=44,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=53.105, target_world_pose=x:-0.25_y:-0.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=53.106, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=53.111, duration_sec=0.0059, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=53.322, task_id='start', waypoint_idx=44,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=53.523, task_id='start', waypoint_idx=44,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=53.524, task_id='start', waypoint_idx=45,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=53.528, target_world_pose=x:-0.25_y:-0.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=53.532, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=53.535, duration_sec=0.0070, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=53.743, task_id='start', waypoint_idx=45,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=53.944, task_id='start', waypoint_idx=45,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=53.944, task_id='start', waypoint_idx=46,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=53.948, target_world_pose=x:-0.25_y:-0.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=53.949, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=53.954, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=54.165, task_id='start', waypoint_idx=46,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=54.366, task_id='start', waypoint_idx=46,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=54.367, task_id='start', waypoint_idx=47,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=54.370, target_world_pose=x:-0.25_y:0.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=54.370, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=54.374, duration_sec=0.0040, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=54.583, task_id='start', waypoint_idx=47,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=54.784, task_id='start', waypoint_idx=47,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=54.785, task_id='start', waypoint_idx=48,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=54.789, target_world_pose=x:-0.25_y:0.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=54.790, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=54.795, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=55.011, task_id='start', waypoint_idx=48,\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=55.212, task_id='start', waypoint_idx=48,\
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=55.213, robot_id=robot_1,\
+[PERF_LOG] event=EXEC_PATH_SUCCESS_COMPLETE, timestamp=55.214, task_id='start', exec_duration_sec=20.772,\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=55.214, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_EXECUTOR_RESPONSE_RECEIVED, timestamp=55.214, task_id='start',\
+[PERF_LOG] event=MANAGER_TASK_COMPLETED_VIA_STATUS, timestamp=55.214, task_id='start',\
+[PERF_LOG] event=MANAGER_TASK_REMOVED, timestamp=55.222, task_id='start', remaining_tasks=1"
+[PERF_LOG] event=MANAGER_TASK_COMPLETED_POST_EXEC_SUCCESS, timestamp=55.222, task_id='start'"
+[PERF_LOG] event=MANAGER_TASK_REMOVE_ATTEMPT_NO_CHANGE, timestamp=55.224, task_id='start',\
+[PERF_LOG] event=MANAGER_DECIDE_CB_END, timestamp=55.225, total_duration_sec=23.204"
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=55.226"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=55.229, duration_sec=0.0021,\
+[PERF_LOG] event=MANAGER_LLM_REQUEST_SENT, timestamp=55.230, robot_pose=x:-0.25_y:0.00_th:-0,\
+[PERF_LOG] event=MANAGER_LLM_RESPONSE_RECEIVED, timestamp=55.343, duration_sec=0.111,\
+[PERF_LOG] event=MANAGER_LLM_SUGGESTED_TASK, timestamp=55.345, task_id='charging_station'"
+[PERF_LOG] event=MANAGER_TASK_ASSIGNED, timestamp=55.346, task_id='charging_station'"
+[PERF_LOG] event=MANAGER_PLAN_EXEC_START, timestamp=55.347, task_id='charging_station'"
+[PERF_LOG] event=MANAGER_PAT_SERVICE_WAIT_END, timestamp=55.352, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_PAT_REQUEST_SENT, timestamp=55.353, task_id='charging_station',\
+[PERF_LOG] event=MANAGER_PAT_RESPONSE_RECEIVED, timestamp=59.208, task_id='charging_station',\
+[PERF_LOG] event=MANAGER_PLANNER_SERVICE_WAIT_END, timestamp=59.213, duration_sec=0.002"
+[PERF_LOG] event=MANAGER_PLANNER_REQUEST_SENT, timestamp=59.215, task_id='charging_station',\
+[PERF_LOG] event=PLANNER_GET_PATH_REQUEST_RECEIVED, timestamp=59.217, start_pose=x:-0.25_y:0.00_th:-0,\
+[PERF_LOG] event=PLANNER_ASTAR_CALL_END, timestamp=59.220, astar_duration_sec=0.0003,\
+[PERF_LOG] event=PLANNER_GET_PATH_SUCCESS, timestamp=59.223, planning_duration_sec=0.006,\
+[PERF_LOG] event=MANAGER_PLANNER_RESPONSE_RECEIVED, timestamp=59.225, task_id='charging_station',\
+[PERF_LOG] event=MANAGER_EXECUTOR_SERVICE_WAIT_END, timestamp=59.230, duration_sec=0.001"
+[PERF_LOG] event=MANAGER_EXECUTOR_REQUEST_SENT, timestamp=59.233, task_id='charging_station',\
+[PERF_LOG] event=EXEC_PATH_REQUEST_RECEIVED, timestamp=59.237, task_id='charging_station',\
+[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp=59.238, robot_id=robot_1,\
+[PERF_LOG] event=MANAGER_ROBOT_STATUS_RECEIVED, timestamp=59.239, robot_id=robot_1,\
+[PERF_LOG] event=EXEC_GET_MODEL_STATE_INITIAL_CALL, timestamp=59.275, duration_sec=0.0024,\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=59.276, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=59.279, target_world_pose=x:-0.25_y:0.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=59.280, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=59.283, duration_sec=0.0038, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=59.499, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=59.700, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=59.701, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=59.706, target_world_pose=x:-0.25_y:0.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=59.707, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=59.712, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=59.923, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=60.123, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=60.124, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=60.128, target_world_pose=x:-0.25_y:-0.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=60.129, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=60.132, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=60.344, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=60.544, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=60.545, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=60.548, target_world_pose=x:-0.25_y:-0.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=60.549, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=60.554, duration_sec=0.0048, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=60.763, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=60.963, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=60.964, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=60.967, target_world_pose=x:-0.25_y:-0.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=60.967, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=60.971, duration_sec=0.0043, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=61.182, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=61.383, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=61.383, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=61.386, target_world_pose=x:-0.25_y:-1.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=61.387, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=61.392, duration_sec=0.0051, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=61.605, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=61.807, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=61.807, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=61.811, target_world_pose=x:-0.25_y:-1.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=61.812, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=61.816, duration_sec=0.0048, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=62.026, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=62.226, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=62.227, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=62.231, target_world_pose=x:-0.25_y:-1.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=62.232, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=62.237, duration_sec=0.0062, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=62.448, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=62.649, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=62.649, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=62.654, target_world_pose=x:-0.25_y:-1.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=62.655, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=62.660, duration_sec=0.0052, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=62.872, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=63.073, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=63.074, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=63.079, target_world_pose=x:-0.25_y:-2.00_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=63.080, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=63.086, duration_sec=0.0062, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=63.296, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=63.497, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=63.498, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=63.504, target_world_pose=x:-0.25_y:-2.25_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=63.505, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=63.511, duration_sec=0.0066, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=63.721, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=63.922, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=63.922, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=63.930, target_world_pose=x:-0.25_y:-2.50_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=63.931, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=63.935, duration_sec=0.0044, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=64.144, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=64.346, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=64.346, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=64.352, target_world_pose=x:-0.25_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=64.354, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=64.358, duration_sec=0.0058, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=64.569, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=64.770, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=64.771, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=64.775, target_world_pose=x:-0.25_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=64.776, world_x=-0.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=64.780, duration_sec=0.0050, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=64.992, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=65.193, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=65.194, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=65.200, target_world_pose=x:-0.50_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=65.201, world_x=-0.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=65.205, duration_sec=0.0052, is_safe=True,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp=65.223"
+[PERF_LOG] event=MANAGER_GET_MODEL_STATE_CALL, timestamp=65.227, duration_sec=0.0019,\
+[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp=65.228"
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=65.416, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=65.617, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=65.618, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=65.620, target_world_pose=x:-0.75_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=65.621, world_x=-0.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=65.624, duration_sec=0.0039, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=65.837, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=66.038, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=66.039, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=66.045, target_world_pose=x:-1.00_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=66.045, world_x=-1.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=66.050, duration_sec=0.0056, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=66.260, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=66.463, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=66.464, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=66.467, target_world_pose=x:-1.25_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=66.467, world_x=-1.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=66.471, duration_sec=0.0045, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=66.687, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=66.888, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=66.889, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=66.895, target_world_pose=x:-1.50_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=66.897, world_x=-1.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=66.901, duration_sec=0.0056, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=67.112, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=67.313, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=67.316, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=67.319, target_world_pose=x:-1.75_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=67.320, world_x=-1.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=67.325, duration_sec=0.0057, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=67.535, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=67.736, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=67.736, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=67.741, target_world_pose=x:-2.00_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=67.742, world_x=-2.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=67.745, duration_sec=0.0045, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=67.955, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=68.155, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=68.157, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=68.161, target_world_pose=x:-2.25_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=68.163, world_x=-2.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=68.167, duration_sec=0.0053, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=68.376, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=68.578, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=68.579, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=68.582, target_world_pose=x:-2.50_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=68.583, world_x=-2.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=68.587, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=68.800, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=69.000, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=69.000, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=69.004, target_world_pose=x:-2.75_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=69.005, world_x=-2.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=69.011, duration_sec=0.0068, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=69.222, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=69.423, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=69.424, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=69.429, target_world_pose=x:-3.00_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=69.430, world_x=-3.00,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=69.435, duration_sec=0.0066, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=69.644, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=69.846, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=69.847, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=69.849, target_world_pose=x:-3.25_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=69.850, world_x=-3.25,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=69.854, duration_sec=0.0049, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=70.065, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=70.265, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=70.265, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=70.270, target_world_pose=x:-3.50_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=70.271, world_x=-3.50,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=70.275, duration_sec=0.0054, is_safe=True,\
+[PERF_LOG] event=EXEC_TELEPORT_CALL_END, timestamp=70.483, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_END, timestamp=70.684, task_id='charging_station',\
+[PERF_LOG] event=EXEC_WAYPOINT_START, timestamp=70.684, task_id='charging_station',\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_START, timestamp=70.688, target_world_pose=x:-3.75_y:-2.75_th:ERR_CONVERTING_QUAT"
+[PERF_LOG] event=EXEC_SAFETY_CHECK_GRID_CONVERSION, timestamp=70.689, world_x=-3.75,\
+[PERF_LOG] event=EXEC_SAFETY_CHECK_END, timestamp=70.694, duration_sec=0.0058, is_safe=True,\
+[PERF_LOG] eve
