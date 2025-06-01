@@ -22,11 +22,11 @@ rosbag record -O performance_capture.bag /rosout_agg
 
 Ctrl + C to exit
 
-This captures a bag in the root directory `/catkin_ws/`, which you can then convert to a log file using `rostobag.py`.
+This captures a bag in the root directory `/catkin_ws/`, which you can then convert to a log file using `bagtolog.py`.
 
-More robust than previous version, make sure you use `rostobag.py` with `python3`.
+More robust than previous version, make sure you use `bagtolog.py` with `python3`.
 
-You will need to install dependencies:
+You will need to install dependencies (atleast I ran into them):
 ```
 pip install pycryptodomex
 pip install python-gnupg
@@ -34,7 +34,7 @@ pip install python-gnupg
 
 Then run `logging.py`.
 
-Make sure to point to the log file — update the code (path is hardcoded).
+> ⚠️ Note: Make sure to point to the log file — update the code (path is hardcoded). IN BOTH CASES
 
 ## Requirements
 
