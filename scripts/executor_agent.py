@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import rospy
 import math
+import numpy as np
 from gazebo_msgs.msg import ModelState
 from gazebo_msgs.srv import SetModelState, GetModelState #  uses full names for service proxies
 from warehouse_robot.srv import ExecutePath, ExecutePathResponse, GetPath
@@ -10,16 +11,36 @@ from nav_msgs.msg import OccupancyGrid
 import time # For timing blocks
 
 # Helper to format pose for logging
-def format_pose_for_log(pose_obj):
-    if hasattr(pose_obj, 'orientation') and all(hasattr(pose_obj.orientation, attr) for attr in ['x', 'y', 'z', 'w']):
+def format_pose_for_log(pose_obj_from_waypoint): # pose_obj_from_waypoint is waypoint.pose
+    # This function now correctly uses np.degrees
+    if hasattr(pose_obj_from_waypoint, 'orientation') and \
+            all(hasattr(pose_obj_from_waypoint.orientation, attr) for attr in ['x', 'y', 'z', 'w']):
         try:
-            _, _, yaw = euler_from_quaternion([pose_obj.orientation.x, pose_obj.orientation.y, pose_obj.orientation.z, pose_obj.orientation.w])
-            return f"x:{pose_obj.position.x:.2f}_y:{pose_obj.position.y:.2f}_th:{np.degrees(yaw):.0f}"
-        except Exception: # pylint: disable=broad-except
-            return f"x:{pose_obj.position.x:.2f}_y:{pose_obj.position.y:.2f}_th:ERR_CONVERTING_QUAT"
-    elif isinstance(pose_obj, dict) and all(k in pose_obj for k in ['x','y','theta']):
-        return f"x:{pose_obj['x']:.2f}_y:{pose_obj['y']:.2f}_th:{np.degrees(pose_obj['theta']):.0f}"
-    return "POSE_FORMAT_ERROR"
+            q_list = [
+                pose_obj_from_waypoint.orientation.x,
+                pose_obj_from_waypoint.orientation.y,
+                pose_obj_from_waypoint.orientation.z,
+                pose_obj_from_waypoint.orientation.w
+            ]
+            if any(math.isnan(val) or math.isinf(val) for val in q_list): # math is usually imported
+                raise ValueError("NaN or Inf in quaternion components")
+
+            if all(abs(val) < 1e-9 for val in q_list):
+                yaw_deg = 0.0
+            else:
+                _, _, yaw_rad = euler_from_quaternion(q_list)
+                yaw_deg = np.degrees(yaw_rad)
+
+            return f"x:{pose_obj_from_waypoint.position.x:.2f}_y:{pose_obj_from_waypoint.position.y:.2f}_th:{yaw_deg:.0f}"
+        except Exception as e:
+            rospy.logwarn_throttle(5,
+                                   f"Error converting waypoint pose to log string ({type(e).__name__}): {e}. Pose: {pose_obj_from_waypoint}")
+            return f"x:{pose_obj_from_waypoint.position.x:.2f}_y:{pose_obj_from_waypoint.position.y:.2f}_th:ERR_CONV_QUAT"
+    elif isinstance(pose_obj_from_waypoint, dict) and all(k in pose_obj_from_waypoint for k in ['x','y','theta']): # For dict style pose
+        return f"x:{pose_obj_from_waypoint['x']:.2f}_y:{pose_obj_from_waypoint['y']:.2f}_th:{np.degrees(pose_obj_from_waypoint['theta']):.0f}" # np is now defined
+    return "POSE_FORMAT_ERROR_STRUCTURE"
+
+
 
 class ExecutorAgent:
     def __init__(self):
@@ -375,35 +396,7 @@ class ExecutorAgent:
         #  did not have a broad except Exception here.
 
 
-    def format_pose_for_log(pose_obj_from_waypoint):  # pose_obj_from_waypoint is waypoint.pose
-        if hasattr(pose_obj_from_waypoint, 'orientation') and \
-                all(hasattr(pose_obj_from_waypoint.orientation, attr) for attr in ['x', 'y', 'z', 'w']):
-            try:
-                # Ensure quaternion components are valid numbers
-                q_list = [
-                    pose_obj_from_waypoint.orientation.x,
-                    pose_obj_from_waypoint.orientation.y,
-                    pose_obj_from_waypoint.orientation.z,
-                    pose_obj_from_waypoint.orientation.w
-                ]
-                if any(math.isnan(val) or math.isinf(val) for val in q_list):
-                    raise ValueError("NaN or Inf in quaternion components")
 
-                # Check for all zeros (invalid quaternion for euler_from_quaternion)
-                if all(abs(val) < 1e-9 for val in q_list):  # Effectively (0,0,0,0)
-                    # This might represent "any orientation" or an uninitialized one.
-                    # For logging, we can indicate this or assume 0 yaw.
-                    yaw_deg = 0.0  # Or some indicator like "ANY_YAW"
-                else:
-                    _, _, yaw_rad = euler_from_quaternion(q_list)
-                    yaw_deg = np.degrees(yaw_rad)
-
-                return f"x:{pose_obj_from_waypoint.position.x:.2f}_y:{pose_obj_from_waypoint.position.y:.2f}_th:{yaw_deg:.0f}"
-            except Exception as e:
-                rospy.logwarn_throttle(5,
-                                       f"Error converting waypoint pose to log string: {e}. Pose: {pose_obj_from_waypoint}")
-                return f"x:{pose_obj_from_waypoint.position.x:.2f}_y:{pose_obj_from_waypoint.position.y:.2f}_th:ERR_CONV_QUAT"
-        return "POSE_FORMAT_ERROR_STRUCTURE"
 
 if __name__ == '__main__':
     try:

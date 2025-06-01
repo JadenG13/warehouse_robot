@@ -1,7 +1,20 @@
-RUN COMMAND:
+RUN COMMAND for logging:
 
-rostopic echo /rosout_agg | grep "\[PERF_LOG\]" | sed 's/.*msg: "//;s/"}//' > performance_only.log
+rosbag record -O performance_capture.bag /rosout_agg
+
+Ctrl + C to exit
+
+
+This capture a bag in the root directory /catkin_ws/ which you can then convert to a log file:
 
 
 
-IT CAN BE A BIT FUCKING RETARDED SO DO CHECK AGAINST THE ACTUAL LOGS TO MAKE SURE IT HAS EVERYTHING
+More robust than previous version, make sure you use rostobag.py with python3
+^ you will need pip install pycryptodomex + pip install python-gnupg
+
+
+then run logging.py
+
+make sure to point to the log file, update code (path is hardcoded)
+
+

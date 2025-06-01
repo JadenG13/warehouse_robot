@@ -1,4 +1,4 @@
-# warehouse_robot  
+# warehouse_robot
 *(3806ICT) Robotics Agents and Reasoning*
 
 ## Usage
@@ -12,6 +12,29 @@ catkin_make && source ~/catkin_ws/devel/setup.sh
 ```
 export DISABLE_ROS1_EOL_WARNINGS=1 && roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1
 ```
+
+## Logging (rosbag)
+
+### Run Command for Logging
+```
+rosbag record -O performance_capture.bag /rosout_agg
+```
+
+Ctrl + C to exit
+
+This captures a bag in the root directory `/catkin_ws/`, which you can then convert to a log file using `rostobag.py`.
+
+More robust than previous version, make sure you use `rostobag.py` with `python3`.
+
+You will need to install dependencies:
+```
+pip install pycryptodomex
+pip install python-gnupg
+```
+
+Then run `logging.py`.
+
+Make sure to point to the log file — update the code (path is hardcoded).
 
 ## Requirements
 

@@ -239,6 +239,7 @@ class PlannerAgent:
 
             rospy.loginfo(f"[Planner] Generated path with {len(waypoints)} waypoints") #  log
             planning_duration_sec = rospy.Time.now().to_sec() - handler_start_time_ros
+            print(f"DEBUG_PLANNER_AGENT VALS: num_waypoints={len(waypoints)}, num_actions={len(actions)}, path_length_meters={path_length_meters}")
             rospy.loginfo(f"[PERF_LOG] event=PLANNER_GET_PATH_SUCCESS, timestamp={rospy.Time.now().to_sec():.3f}, planning_duration_sec={planning_duration_sec:.3f}, num_waypoints={len(waypoints)}, num_actions={len(actions)}, path_length_meters={path_length_meters:.3f}, start_grid=({start_x_grid},{start_y_grid},{start_th_grid}), goal_grid=({goal_x_grid},{goal_y_grid},{goal_th_grid})")
 
             return GetPathResponse(
