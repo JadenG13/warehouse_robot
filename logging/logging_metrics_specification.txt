@@ -1,0 +1,129 @@
+# Logging and Metrics Specification
+
+## I. General Data Logging Strategy
+
+- Timestamps: Log precise timestamps using rospy.Time.now().to_sec() for all key events.
+
+- Unique IDs:
+  - Task ID: Used to track a task across all agents.
+  - Plan ID: Assign a new ID for each plan attempt (replanning included).
+
+- Event Types to Log:
+  - PLAN_REQUEST, PLAN_SUCCESS, PLAN_FAIL
+  - EXEC_START, EXEC_WAYPOINT_REACHED, EXEC_SAFETY_FAIL, EXEC_COMPLETE
+  - VALIDATE_REQUEST, VALIDATE_SUCCESS (PATH_EXISTS), VALIDATE_SUCCESS (NO_PATH), VALIDATE_FAIL
+  - LLM_DECISION_START, LLM_DECISION_END
+
+- Data Payloads (with each event):
+  - Start/goal pose
+  - Number of waypoints
+  - Path cost or length
+  - LLM prompt/response
+  - PAT validation result
+
+
+## II. Metrics for planner_agent.py
+
+1. Planning Success Rate
+   - Definition: % of path requests that result in a valid path.
+   - Formula: (Successful plans / Total requests) * 100%
+   - Insight: Planner reliability.
+
+2. Average Planning Time
+   - Definition: Time between PLAN_REQUEST and PLAN_SUCCESS/FAIL.
+   - Formula: avg(T_SUCCESS - T_REQUEST)
+   - Insight: A* computational efficiency.
+
+3. Average Path Length (Normalized)
+   - Definition: Mean length of successful paths.
+   - Formula: avg(path_length_meters) or len(waypoints) * resolution
+   - Insight: Path efficiency.
+
+4. Average Number of Actions/Waypoints
+   - Definition: Mean number of waypoints per plan.
+   - Insight: Plan granularity.
+
+5. Heuristic Effectiveness (Advanced)
+   - Definition: Compare h_score to g_score_diff.
+   - Insight: A* heuristic quality.
+
+## III. Metrics for executor_agent.py
+
+1. Path Execution Success Rate
+   - Definition: % of plans executed without unrecoverable errors.
+   - Formula: (Successful executions / Total attempts) * 100%
+
+2. Average Execution Time
+   - Definition: Time from EXEC_START to EXEC_COMPLETE.
+   - Formula: avg(T_COMPLETE - T_START)
+
+3. Replanning Rate
+   - Definition: % of safety checks that triggered replanning.
+   - Formula: (Replans / Waypoints checked) * 100%
+
+4. Safety Check Overhead
+   - Definition: Time per check_position_safety call.
+   - Formula: avg(safety_check_duration)
+
+5. Distance Traveled vs. Planned Distance
+   - Definition: Only applies if not teleporting.
+   - Formula: Actual / Planned distance
+
+## IV. Metrics for manager_agent.py
+
+1. Task Assignment Latency
+   - Definition: Time from robot becoming idle to task assigned.
+   - Formula: avg(T_ASSIGN_NEW - T_IDLE)
+
+2. LLM Decision Time
+   - Definition: Time from prompt sent to decision received.
+   - Formula: avg(T_LLM_END - T_LLM_START)
+
+3. LLM Task Choice Correctness
+   - Definition: % of LLM choices matching an optimal strategy.
+   - Formula: (Correct choices / Total choices) * 100%
+
+4. End-to-End Task Orchestration Time
+   - Definition: Task time from assignment to completion.
+   - Formula: T_COMPLETE - T_ASSIGNED
+
+5. Rate of Successful Task Orchestration
+   - Definition: % of tasks completed successfully.
+   - Formula: (Completed / Initiated) * 100%
+
+## V. Metrics for validator_agent (C++ PAT)
+
+1. Validation Time
+   - Definition: Time from request to result.
+   - Formula: T_RESPONSE - T_REQUEST
+
+2. CSP Model Generation Time
+   - Definition: Time for build_csp.
+   - Insight: Model-building overhead.
+
+3. Validator Accuracy
+   - Categories:
+     - TP: PAT = exists, Planner = success
+     - TN: PAT = no path, Planner = fail
+     - FP: PAT = exists, Planner = fail
+     - FN: PAT = no path, Planner = success
+
+   - Formulas:
+     - Accuracy = (TP + TN) / Total
+     - Precision = TP / (TP + FP)
+     - Recall = TP / (TP + FN)
+
+## VI. Overall System Performance
+
+1. Task Completion Rate
+   - Definition: % of tasks completed end-to-end.
+   - Formula: (Completed / Initiated) * 100%
+
+2. Average Task Completion Time
+   - Formula: avg(T_FINAL_COMPLETION - T_TASK_AVAILABLE)
+
+3. System Throughput
+   - Formula: Total completed / Operational time
+
+4. Robot Idle Time Percentage
+   - Formula: (Idle time / Total time) * 100%
