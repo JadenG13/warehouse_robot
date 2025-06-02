@@ -1,5 +1,4 @@
 #include <ros/ros.h>
-#include <warehouse_robot/ValidatePath.h>
 #include <warehouse_robot/ValidatePathWithPat.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <geometry_msgs/PoseStamped.h>
