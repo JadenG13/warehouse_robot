@@ -1,65 +1,58 @@
-# warehouse_robot
+# Warehouse Robot
+
 *(3806ICT) Robotics Agents and Reasoning*
+
+## Setup Instructions
+
+1. Create the workspace directory:
+   ```bash
+   mkdir -p ~/catkin_ws/src
+   cd ~/catkin_ws/src
+   ```
+
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/JadenG13/warehouse_robot.git
+   cd warehouse_robot
+   ```
+
+3. Make the requirements script executable and run it:
+   ```bash
+   chmod +x requirements.sh
+   ./requirements.sh
+   cd ../..
+   ```
+
+4. Install llama3.2 by doing the following:
+   - In the first terminal, start the Ollama server:
+     ```bash
+     ollama serve
+     ```
+   - In the second terminal, run the llama3.2 model:
+     ```bash
+     ollama run llama3.2
+     ```
+     Once the installation is complete, you may exit the terminal by pressing `Ctrl+C`.
 
 ## Usage
 
-### catkin_make package
-```
+### Build the Package
+
+Run the following command to build the package:
+```bash
 catkin_make && source ~/catkin_ws/devel/setup.sh
 ```
 
-### Launch the Grid Navigation Node
-```
-export DISABLE_ROS1_EOL_WARNINGS=1 && roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1
-```
+### Start the Ollama Server
 
-## Logging (rosbag)
-
-### Run Command for Logging
-```
-rosbag record -O performance_capture.bag /rosout_agg
-```
-
-Ctrl + C to exit
-
-This captures a bag in the root directory `/catkin_ws/`, which you can then convert to a log file using `bagtolog.py`.
-
-More robust than previous version, make sure you use `bagtolog.py` with `python3`.
-
-You will need to install dependencies (atleast I ran into them):
-```
-pip install pycryptodomex
-pip install python-gnupg
-```
-
-Then run `logging.py`.
-
-> ⚠️ Note: Make sure to point to the log file — update the code (path is hardcoded). IN BOTH CASES
-
-## Requirements
-
-- Ollama 3.2
-
-## Installing Ollama
-
-### Option 1: Install via Shell Script
-```
-curl -fsSL https://ollama.com/install.sh | sh
-```
-
-### Option 2: Install via pip (Python wrapper)
-```
-pip install ollama
-```
-
-> ⚠️ Note: The pip version installs the Python client. You still need to install and run the native Ollama backend using Option 1.
-
-### Run the Ollama model
-```
-ollama run llama3.2
-```
-
-### Start the Ollama server (if not already running)
-```
+Ensure the Ollama server is running:
+```bash
 ollama serve
+```
+
+### Launch the Package
+
+Launch the package with the specified world:
+```bash
+roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1
 ```

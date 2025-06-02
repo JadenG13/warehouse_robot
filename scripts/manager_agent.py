@@ -314,6 +314,14 @@ class ManagerAgent:
             rospy.loginfo(f"[PERF_LOG] event=MANAGER_PLAN_EXEC_FAIL_TASK_NOT_FOUND, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}'")
             #  behavior for this specific error case: simply returns.
             # State reset (is_busy, current_task) would only occur if self.current_task matched task_id_being_processed.
+             # Initial idle status
+            idle = RobotStatus(
+                robot_id='robot_1',
+                state='idle',
+                task_id=''
+            )
+            self.status_pub.publish(idle)
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_ROBOT_STATUS_PUBLISHED, timestamp={rospy.Time.now().to_sec():.3f}, robot_id=robot_1, state=idle, task_id=''")
             if self.current_task == task_id_being_processed:
                  self.is_busy = False
                  self.current_task = None
@@ -349,8 +357,17 @@ class ManagerAgent:
         if not pat_resp.exists:
             rospy.logerr(f"[Manager] PAT verification shows no path exists for task {task_id_being_processed}: {pat_resp.message}") #  log
             self.remove_task(task_id_being_processed)
+             # Initial idle status
+            idle = RobotStatus(
+                robot_id='robot_1',
+                state='idle',
+                task_id=''
+            )
+            self.status_pub.publish(idle)
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_ROBOT_STATUS_PUBLISHED, timestamp={rospy.Time.now().to_sec():.3f}, robot_id=robot_1, state=idle, task_id=''")
             if self.current_task: #  check
                 self.is_busy = False
+                self.is_replanning = False #  reset replanning flag
                 self.current_task = None
             return
 

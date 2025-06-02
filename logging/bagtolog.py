@@ -21,9 +21,11 @@ def extract_logs(bag_file_path, output_txt_file):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python extract_perf_logs_from_bag.py <input_bag_file> <output_txt_file>")
+        print("Usage: python bagtolog.py <input_bag_file> <output_txt_file>")
         sys.exit(1)
 
     bag_file = sys.argv[1]
     out_file = sys.argv[2]
     extract_logs(bag_file, out_file)
+    
+    # python3 bagtolog.py performance_capture.bag performance_capture.bag.log

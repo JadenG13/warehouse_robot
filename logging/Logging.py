@@ -514,5 +514,5 @@ def calculate_metrics(log_file_path):
 
 if __name__ == "__main__":
     # Update this path to point at your log file
-    log_file = "/home/eflinspy/ros_ws/src/warehouse_robot/logging/performance_capture.bag.log"
+    log_file = "performance_capture.bag.log"
     calculate_metrics(log_file)
