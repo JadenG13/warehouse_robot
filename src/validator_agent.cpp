@@ -12,6 +12,14 @@
 
 namespace fs = std::filesystem;
 
+// ValidatorAgent: A ROS node that validates robot paths using PAT model checker
+//
+// This agent converts costmap data to a CSP model and uses PAT to check
+// if a valid path exists between start and goal positions. It works by:
+// 1. Converting world coordinates to grid coordinates
+// 2. Cropping the costmap to the usable area (-7,-7) to (7,7)
+// 3. Generating a CSP model from the grid
+// 4. Using PAT to verify path existence
 class ValidatorAgent {
 private:
     ros::NodeHandle nh_;
@@ -20,25 +28,37 @@ private:
 
     nav_msgs::OccupancyGrid::ConstPtr global_costmap_;
 
-    // PAT related paths
+    // Configuration parameters
+    std::string world_name_;
+    XmlRpc::XmlRpcValue config_;
+    double cell_size_;
+    double grid_origin_x_;
+    double grid_origin_y_;
+
+    // PAT model checker paths and configuration
     std::string PAT_DIR = std::string(getenv("HOME")) + "/catkin_ws/src/warehouse_robot/pat/";
     const fs::path TEMPLATE_PATH = PAT_DIR + "template.csp";
     const fs::path PAT_EXE = PAT_DIR + "MONO-PAT-v3.6.0/PAT3.Console.exe";
     const fs::path OUTPUT_FILE = PAT_DIR + "output.txt";
     const fs::path RUN_CSP = PAT_DIR + "run.csp";
 
-    /**
-     * Convert world coordinates to grid coordinates
-     */
+    // Convert world coordinates to grid coordinates.
+    // x, y: World coordinates
+    // map: Occupancy grid pointer
+    // Returns: (x, y) grid coordinates
     std::pair<int, int> worldToGrid(double x, double y, const nav_msgs::OccupancyGrid::ConstPtr& map) {
         int grid_x = static_cast<int>(std::round((x - map->info.origin.position.x) / map->info.resolution));
         int grid_y = static_cast<int>(std::round((y - map->info.origin.position.y) / map->info.resolution));
         return {grid_x, grid_y};
     }
 
-    /**
-     * Build CSP from template and current data
-     */
+    // Build CSP model from grid data.
+    // grid: Occupancy grid as vector
+    // start_rc: Start (row, col)
+    // goal_rc: Goal (row, col)
+    // M: Grid size
+    // out_path: Output CSP file path
+    // Returns: Path to generated CSP file
     fs::path buildCsp(const std::vector<int>& grid, 
                       std::pair<int, int> start_rc,
                       std::pair<int, int> goal_rc,
@@ -94,9 +114,7 @@ private:
         return fs::path(out_path);
     }
 
-    /**
-     * Replace all occurrences of a string
-     */
+    // Replace all occurrences of a string
     std::string replace_all(std::string str, const std::string& from, const std::string& to) {
         size_t start_pos = 0;
         while((start_pos = str.find(from, start_pos)) != std::string::npos) {
@@ -106,9 +124,9 @@ private:
         return str;
     }
 
-    /**
-     * Run PAT verification
-     */
+    // Run PAT verification on the generated CSP model
+    // csp_path: Path to CSP file
+    // Returns: true if a path exists, false otherwise
     bool verifyWithPat(const fs::path& csp_path) {
         std::string command = "mono " + PAT_EXE.string() + " " + csp_path.string() + " " + OUTPUT_FILE.string();
         int result = system(command.c_str());
@@ -118,7 +136,7 @@ private:
             return false;
         }
 
-        // Read output file to check result
+        // Parse verification result from output file
         std::ifstream output_file(OUTPUT_FILE);
         std::string line;
         bool valid = true;
@@ -135,17 +153,33 @@ private:
 
 public:
     ValidatorAgent() : nh_("~") {
-        // Subscribe to global costmap
+        // Load configuration from parameters
+        if (!nh_.getParam("world_name", world_name_)) {
+            ROS_ERROR("[Validator] Failed to get world_name parameter");
+            throw std::runtime_error("Failed to get world_name parameter");
+        }
+        
+        if (!nh_.getParam("/" + world_name_, config_)) {
+            ROS_ERROR_STREAM("[Validator] Failed to get config for world: " << world_name_);
+            throw std::runtime_error("Failed to get world configuration");
+        }
+        
+        // Get configuration values
+        cell_size_ = static_cast<double>(config_["cell_size"]);
+        grid_origin_x_ = static_cast<double>(config_["grid_origin_x"]);
+        grid_origin_y_ = static_cast<double>(config_["grid_origin_y"]);
+        
+
+        // Initialize ROS components
         costmap_sub_ = nh_.subscribe("/move_base/global_costmap/costmap", 10, 
             &ValidatorAgent::costmapCallback, this);
-
-        // Register services
         validate_pat_srv_ = nh_.advertiseService("validate_path_with_pat",
             &ValidatorAgent::handleValidatePathWithPat, this);
 
         ROS_INFO("[Validator] Ready.");
     }
 
+    // Store the latest costmap data for path validation
     void costmapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg) {
         global_costmap_ = msg;
     }
@@ -167,21 +201,18 @@ public:
             ROS_INFO("[Validator] Validating start and goal poses...");
             
             // Get the costmap resolution and info
-            double resolution = global_costmap_->info.resolution;
             int costmap_width = global_costmap_->info.width;
             int costmap_height = global_costmap_->info.height;
             double origin_x = global_costmap_->info.origin.position.x;
             double origin_y = global_costmap_->info.origin.position.y;
 
-            // Convert world coords to costmap indices
-            int cells_per_meter = 1.0 / resolution;
             
-            // Get grid coordinates for the useable area (-7,-7) to (7,7)
-            // Convert from world coordinates to grid indices
-            int min_x = static_cast<int>(std::round((-7.0 - origin_x) / resolution));
-            int max_x = static_cast<int>(std::round((7.0 - origin_x) / resolution));
-            int min_y = static_cast<int>(std::round((-7.0 - origin_y) / resolution));
-            int max_y = static_cast<int>(std::round((7.0 - origin_y) / resolution));
+            // Use grid coordinates from constructor
+            ROS_DEBUG_STREAM("[Validator] Using grid origin: (" << grid_origin_x_ << ", " << grid_origin_y_ << ")");
+            int min_x = static_cast<int>(std::round((grid_origin_x_ - origin_x) / cell_size_));
+            int max_x = static_cast<int>(std::round((-grid_origin_x_ - origin_x) / cell_size_));
+            int min_y = static_cast<int>(std::round((grid_origin_y_ - origin_y) / cell_size_));
+            int max_y = static_cast<int>(std::round((-grid_origin_y_ - origin_y) / cell_size_));
 
             // Convert poses to grid coordinates
             auto start = worldToGrid(req.start_pose.pose.position.x,

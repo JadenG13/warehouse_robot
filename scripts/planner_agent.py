@@ -8,7 +8,9 @@ from nav_msgs.msg import OccupancyGrid, Path
 from tf.transformations import euler_from_quaternion
 import time # For timing blocks
 
-# Helper to format pose for logging (kept from previous, it's purely for logging)
+# Helper to format pose for logging
+# Returns a string with x, y, and heading in degrees
+# Accepts either a geometry_msgs.Pose or a dict with x, y, theta
 def format_pose_for_log(pose_obj):
     if hasattr(pose_obj, 'orientation') and all(hasattr(pose_obj.orientation, attr) for attr in ['x', 'y', 'z', 'w']):
         try:
@@ -23,9 +25,9 @@ def format_pose_for_log(pose_obj):
 
 class PlannerAgent:
     def __init__(self):
-        # initialise node
+        # Initialize node and parameters
         rospy.init_node('planner_agent')
-        self.node_start_time = rospy.Time.now().to_sec() # For overall node uptime if needed
+        self.node_start_time = rospy.Time.now().to_sec()
         rospy.loginfo(f"[PERF_LOG] event=PLANNER_INIT, timestamp={self.node_start_time:.3f}")
 
         # Subscribe to global costmap
@@ -37,56 +39,50 @@ class PlannerAgent:
         self.global_costmap = None
         self.global_costmap_info = None
 
-        # get map configuration and cell size (resolution) of map grid
+        # Get map configuration and cell size
         self.world_name = rospy.get_param("~world_name")
         self.config = rospy.get_param(self.world_name)
-        self.cell_size = self.config["cell_size"] #  line, preserved
+        self.cell_size = self.config["cell_size"]
 
         # Wait for costmap to be available
-        rospy.loginfo("[Planner] Waiting for costmap...") #  log
+        rospy.loginfo("[Planner] Waiting for costmap...")
         wait_for_costmap_start_time = time.monotonic()
-        while self.global_costmap is None and not rospy.is_shutdown(): #  condition
+        while self.global_costmap is None and not rospy.is_shutdown():
             rospy.sleep(0.1)
         wait_for_costmap_duration = time.monotonic() - wait_for_costmap_start_time
         if self.global_costmap is not None:
-            rospy.loginfo(f"[Planner] Got initial costmap. Resolution: {self.global_costmap_info.resolution if self.global_costmap_info else 'N/A - Info Missing'}") #  log, slightly enhanced for safety
+            rospy.loginfo(f"[Planner] Got initial costmap. Resolution: {self.global_costmap_info.resolution if self.global_costmap_info else 'N/A - Info Missing'}")
             rospy.loginfo(f"[PERF_LOG] event=PLANNER_COSTMAP_READY, timestamp={rospy.Time.now().to_sec():.3f}, wait_duration_sec={wait_for_costmap_duration:.3f}")
         else:
             rospy.logwarn("[Planner] Shutting down before costmap was received.")
             rospy.loginfo(f"[PERF_LOG] event=PLANNER_COSTMAP_TIMEOUT_OR_SHUTDOWN, timestamp={rospy.Time.now().to_sec():.3f}, wait_duration_sec={wait_for_costmap_duration:.3f}")
 
-
         # Expose the GetPath service
         self.srv = rospy.Service('get_path', GetPath, self.handle_get_path)
-        rospy.loginfo("[Planner] Ready.") #  log
+        rospy.loginfo("[Planner] Ready.")
 
     def global_costmap_callback(self, msg):
-        """Store incoming global costmap data"""
-        is_first_time = self.global_costmap is None # Check before assignment
+        # Store incoming global costmap data
+        is_first_time = self.global_costmap is None
         self.global_costmap = list(msg.data)
         self.global_costmap_info = msg.info
-        if is_first_time and self.global_costmap_info: # Log only on first valid message
+        if is_first_time and self.global_costmap_info:
              rospy.loginfo(f"[PERF_LOG] event=PLANNER_FIRST_COSTMAP_DATA_RECEIVED, timestamp={rospy.Time.now().to_sec():.3f}, width={msg.info.width}, height={msg.info.height}, res={msg.info.resolution:.3f}")
-
         # Count non-zero cells to check if map has obstacles
-        occupied = sum(1 for cell in msg.data if cell > 0) #
-        # rospy.logdebug(f"[Planner] Costmap updated. Occupied cells (cost > 0): {occupied}") # Optional debug
+        occupied = sum(1 for cell in msg.data if cell > 0)
+        # Optional: log occupied cell count for debugging
 
-    # convert robot heading to a quarternion
     def _yaw_to_quaternion(self, yaw):
-        # convert yaw angle to geometry_msgs/Quaternion
+        # Convert yaw angle to geometry_msgs/Quaternion
         q = Quaternion()
-        # encodes rotation axis
         q.x = 0.0
         q.y = 0.0
-        # only around z axis
         q.z = np.sin(yaw / 2)
-        # encodes rotation angle
         q.w = np.cos(yaw / 2)
         return q
 
     def handle_get_path(self, req):
-        """Handle path planning requests"""
+        # Handle path planning requests
         handler_start_time_ros = rospy.Time.now().to_sec()
         rospy.loginfo(f"[PERF_LOG] event=PLANNER_GET_PATH_REQUEST_RECEIVED, timestamp={handler_start_time_ros:.3f}, start_pose={format_pose_for_log(req.start_pose)}, goal_pose={format_pose_for_log(req.goal_pose)}")
 
@@ -189,14 +185,13 @@ class PlannerAgent:
 
             path_length_meters = 0.0 # For logging metric
 
-            # Process each action (F, B, L, R) -  comment mentioned 'B' but A* only uses F,L,R
+            # Process each action (F, L, R)
             for act in actions:
                 # Set change in x and y directions to 0
                 di = 0
                 dj = 0
 
                 # Update position based on action and facing direction
-                # Move forward/backwards
                 if act == 'F':
                     if th == 0:  # Facing east
                         di = 1
@@ -263,139 +258,80 @@ class PlannerAgent:
             ) #  response
 
     def check_cell_safety(self, map_i, map_j):
-        """Check if the target cell (x,y) is occupied"""
-        # rospy.loginfo(f"[Planner] Checking cell ({map_i}, {map_j}) for safety") #  was commented out
-        # This function is internal to A*, logging here can be very verbose.
-        # We will rely on the  logic.
-        if not self.global_costmap_info or not self.global_costmap: # Added check for self.global_costmap as well for safety
-            # rospy.logwarn_throttle(5, "[Planner A* Safety] No costmap info/data available for safety check.")
-            return True # Fail safe if no map
-
-        if (0 <= map_i < self.global_costmap_info.width and
-            0 <= map_j < self.global_costmap_info.height):
+        # Return True if cell (map_i, map_j) is occupied or out of bounds
+        if not self.global_costmap_info or not self.global_costmap:
+            return True
+        if (0 <= map_i < self.global_costmap_info.width and 0 <= map_j < self.global_costmap_info.height):
             cell_index = map_j * self.global_costmap_info.width + map_i
             if cell_index < 0 or cell_index >= len(self.global_costmap):
-                # rospy.logwarn(f"[Planner] Invalid index {cell_index} for costmap at ({map_i}, {map_j})") #  was commented out
                 return True
             cost = self.global_costmap[cell_index]
-            if cost > 0:  #  condition: ROS costmaps typically use 0-100 range, with >= 50 being obstacles
-                # rospy.loginfo(f"[Planner] Detected obstacle at ({map_i}, {map_j}) with cost {cost}") #  was commented out
+            if cost > 0:
                 return True
         else:
-            # Treat out-of-bounds as occupied for safety
-            # rospy.loginfo(f"[Planner] Cell ({map_i}, {map_j}) is out of bounds") #  was commented out
             return True
         return False
 
-
-    # A* path finding returning sequence of actions
     def astar(self, start, goal):
         # A* search returning sequence of grid actions
-        # Use goal position for distance heuristic, but keep orientation for final check
-        # Performance logging for A* internals (expanded nodes) can be added here if needed,
-        # but will make logs very verbose. The overall A* call is timed in handle_get_path.
         goal_pos = goal[: 2]
-
-        # Priority queue of nodes to explore: (f-score, h-score, position, actions)
-        # Heuristic defined by Manhattan (taxicab) distance (admissible heuristic)
-        # Plus minimum turns needed to reach goal orientation (0.5 cost per turn)
         start_h = abs(goal_pos[0] - start[0]) + abs(goal_pos[1] - start[1])
-        # Add estimated rotation cost
-        rot_diff = abs((goal[2] - start[2]) % 4) #  calculation
+        rot_diff = abs((goal[2] - start[2]) % 4)
         rot_cost = min(rot_diff, 4 - rot_diff) * 0.5
         start_h += rot_cost
         frontier = [(start_h, start_h, start, [])]
         heapq.heapify(frontier)
-
-        # Keep track of best paths and scores
-        # Parent nodes and actions
-        came_from = {start: None} # 
-        # Lowest known cost to reach each node
-        g_score = {start: 0} # 
-
-        # For optional advanced metric: Heuristic Effectiveness
-        # num_expanded_nodes_astar = 0
-
-        # Main loop
+        came_from = {start: None}
+        g_score = {start: 0}
         while frontier:
-            # num_expanded_nodes_astar +=1
-            # pops lowest cost node
             _, _, current, actions = heapq.heappop(frontier)
             current_pos = current[:2]
-
-            # check if we've reached the goal position and orientation
             if current_pos == goal_pos and current[2] == goal[2]:
-                # rospy.loginfo(f"[PERF_LOG] event=PLANNER_ASTAR_PATH_FOUND_INTERNAL, expanded_nodes={num_expanded_nodes_astar}")
                 return actions
-
-            # for each possible action
-            # only try F, L, R (no backwards movement)
             for act in ['F', 'L', 'R']:
                 i, j, th = current
                 di, dj = 0, 0
                 new_th = th
-
-                # calculate resulting position and orientation
-                # forward movement
                 if act == 'F':
-                    if th == 0:  # Facing east
+                    if th == 0:
                         di = 1
-                    elif th == 1:  # Facing north
+                    elif th == 1:
                         dj = 1
-                    elif th == 2:  # Facing west
+                    elif th == 2:
                         di = -1
-                    else:  # Facing south
+                    else:
                         dj = -1
-                # turning
                 elif act == 'L':
-                    new_th = (th + 1) % 4  # Turn left 90°
-                # else R
+                    new_th = (th + 1) % 4
                 else:
-                    new_th = (th - 1 + 4) % 4  # Turn right 90° ( was (th-1)%4, +4 makes it robust for negative intermediate if any language needed it, Python's % handles it)
-
-                # calculate new state
+                    new_th = (th - 1 + 4) % 4
                 new_i = i + di
                 new_j = j + dj
                 neighbor = (new_i, new_j, new_th)
-
-                # check if move would hit an obstacle or boundary
                 if act == 'F':
                     map_i = new_i
                     map_j = new_j
-
-                    # Check if target position and its immediate neighbors are safe
                     if self.check_cell_safety(map_i, map_j):
                         continue
-
-                # calculate new path score (1 for moves, 0.5 for turns)
                 move_cost = 1.0 if act == 'F' else 0.5
                 tentative_g = g_score[current] + move_cost
-
-                # if we haven't been here before, or this is a better path
                 if neighbor not in g_score or tentative_g < g_score[neighbor]:
-                    # record this path
-                    came_from[neighbor] = (current, act) # 
+                    came_from[neighbor] = (current, act)
                     g_score[neighbor] = tentative_g
-
-                    # calculate new f-score and add to frontier
                     h = abs(goal_pos[0] - new_i) + abs(goal_pos[1] - new_j)
-                    # Add rotation cost to heuristic
-                    rot_diff_h = abs((goal[2] - new_th) % 4) #  calculation
+                    rot_diff_h = abs((goal[2] - new_th) % 4)
                     rot_cost_h = min(rot_diff_h, 4 - rot_diff_h) * 0.5
                     h += rot_cost_h
                     f = tentative_g + h
                     new_actions = actions + [act]
-                    # push into p-queue
                     heapq.heappush(frontier, (f, h, neighbor, new_actions))
-        # rospy.loginfo(f"[PERF_LOG] event=PLANNER_ASTAR_NO_PATH_INTERNAL, expanded_nodes={num_expanded_nodes_astar}")
-        # no path found
         return None
 
     def spin(self):
         rospy.spin()
 
 if __name__=='__main__':
-    try: # Added try-finally for shutdown log
+    try:
         PlannerAgent().spin()
     except rospy.ROSInterruptException:
         rospy.loginfo(f"[PERF_LOG] event=PLANNER_ROS_INTERRUPT, timestamp={rospy.Time.now().to_sec():.3f}")
