@@ -16,11 +16,15 @@
    cd warehouse_robot
    ```
 
-3. Make the requirements script executable and run it:
+3. Install dependencies:
    ```bash
-   chmod +x requirements.sh
-   ./requirements.sh
-   cd ../..
+   sudo apt install -y ros-noetic-move-base-msgs ros-noetic-turtlebot3* ros-noetic-gazebo-ros* mono-complete libmono-system-windows-forms4.0-cil python3-pip
+   curl -fsSL https://ollama.com/install.sh | sh
+   pip install ollama
+   echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+   source ~/.bashrc
+   export DISABLE_ROS1_EOL_WARNINGS=1
+   source ~/.bashrc
    ```
 
 4. Install llama3.2 by doing the following:
