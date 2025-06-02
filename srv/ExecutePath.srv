@@ -3,5 +3,6 @@ string task_id
 geometry_msgs/PoseStamped[] waypoints
 string[]             suggested_actions
 string[]             descriptions
+nav_msgs/Path        path        # Path for visualization in RViz
 ---
 bool success

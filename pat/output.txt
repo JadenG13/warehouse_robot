@@ -3,7 +3,7 @@ Assertion: Robot() reaches goal
 ********Verification Result********
 The Assertion (Robot() reaches goal) is VALID.
 The following trace leads to a state where the condition is satisfied.
-<init -> go_right -> go_right -> go_down -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_down -> go_down -> go_down -> go_down -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_down -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_down -> go_down -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_down -> go_down -> go_right -> go_down -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_down -> go_down -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_down -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_down -> go_down -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_down -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_down -> go_down -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right>
+<init -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_down -> go_down -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_left -> go_up -> go_up -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_up -> go_right -> go_up -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_right -> go_up -> go_up -> go_left -> go_left -> go_left>
 
 ********Verification Setting********
 Admissible Behavior: All
@@ -12,9 +12,9 @@ System Abstraction: False
 
 
 ********Verification Statistics********
-Visited States:368
-Total Transitions:605
-Time Used:0.2619572s
-Estimated Memory Used:25921.072KB
+Visited States:1140
+Total Transitions:3690
+Time Used:1.2976548s
+Estimated Memory Used:24520.288KB
 
 

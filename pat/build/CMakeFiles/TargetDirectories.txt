@@ -1,3 +1,0 @@
-/home/nothink/catkin_ws/src/warehouse_robot/pat/build/CMakeFiles/rebuild_cache.dir
-/home/nothink/catkin_ws/src/warehouse_robot/pat/build/CMakeFiles/edit_cache.dir
-/home/nothink/catkin_ws/src/warehouse_robot/pat/build/CMakeFiles/trigger_pat.dir

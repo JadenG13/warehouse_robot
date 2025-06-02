@@ -4,10 +4,11 @@ import math
 import numpy as np
 from gazebo_msgs.msg import ModelState
 from gazebo_msgs.srv import SetModelState, GetModelState #  uses full names for service proxies
-from warehouse_robot.srv import ExecutePath, ExecutePathResponse, GetPath
+from warehouse_robot.srv import ExecutePath, ExecutePathResponse
 from warehouse_robot.msg import RobotStatus
 from tf.transformations import euler_from_quaternion
-from nav_msgs.msg import OccupancyGrid
+from nav_msgs.msg import OccupancyGrid, Path
+from visualization_msgs.msg import Marker
 import time # For timing blocks
 
 # Helper to format pose for logging
@@ -99,13 +100,21 @@ class ExecutorAgent:
         self.get_model_state = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState) #  name
         self.set_model_state = rospy.ServiceProxy('/gazebo/set_model_state', SetModelState) #  name
 
-        # Wait for path planning service
-        rospy.wait_for_service('/get_path') # 
-        self.get_path = rospy.ServiceProxy('/get_path', GetPath) #  name
+        # # Wait for path planning service
+        # rospy.wait_for_service('/get_path') # 
+        # self.get_path = rospy.ServiceProxy('/get_path', GetPath) #  name
 
         # Service for path execution
         self.srv = rospy.Service('execute_path', ExecutePath, self.execute_callback)
         rospy.loginfo("[EXEC] Ready.") #  log
+
+        # Publisher for planned path visualization
+        self.path_pub = rospy.Publisher(
+            '/planned_path', Path, queue_size=1, latch=True
+        )
+        # Publishers for visualization
+        self.start_marker_pub = rospy.Publisher('/start_position', Marker, queue_size=1, latch=True)
+        self.goal_marker_pub = rospy.Publisher('/goal_position', Marker, queue_size=1, latch=True)
 
     def costmap_callback(self, msg):
         """Store incoming costmap data"""
@@ -212,13 +221,32 @@ class ExecutorAgent:
         task_id_for_log = req.task_id if hasattr(req, 'task_id') else 'UNKNOWN_TASK'
         num_waypoints_for_log = len(req.waypoints) if req.waypoints else 0
         rospy.loginfo(f"[PERF_LOG] event=EXEC_PATH_REQUEST_RECEIVED, timestamp={handler_start_time_ros:.3f}, task_id='{task_id_for_log}', num_waypoints={num_waypoints_for_log}")
-        rospy.loginfo("[EXEC] Received path execution request") #  log
+        rospy.loginfo("[EXEC] Received path execution request")
+
+        # Publish start and goal markers if waypoints exist
+        if req.waypoints:
+            # Publish start position (first waypoint)
+            start_marker = self.create_pose_marker(req.waypoints[0].pose, is_start=True)
+            self.start_marker_pub.publish(start_marker)
+            
+            # Publish goal position (last waypoint)
+            goal_marker = self.create_pose_marker(req.waypoints[-1].pose, is_start=False)
+            self.goal_marker_pub.publish(goal_marker)
+            
+            rospy.loginfo("[EXEC] Published start and goal markers for visualization")
+
+        # Publish the planned path for visualization if present
+        if hasattr(req, 'path') and req.path and hasattr(req.path, 'poses') and req.path.poses:
+            if not req.path.header.frame_id:
+                req.path.header.frame_id = "map"
+            self.path_pub.publish(req.path)
+            rospy.loginfo("[EXEC] Published planned path for visualization.")
 
         # Publish "busy" state
         busy_msg = RobotStatus(
             robot_id='robot_1',
             state='busy',
-            task_id=req.task_id if hasattr(req, 'task_id') else '' # 
+            task_id=task_id_for_log 
         )
         self.status_pub.publish(busy_msg)
         rospy.loginfo(f"[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp={rospy.Time.now().to_sec():.3f}, robot_id=robot_1, state=busy, task_id='{task_id_for_log}'")
@@ -278,35 +306,45 @@ class ExecutorAgent:
                 rospy.logwarn(f"[EXEC] Movement validation failed: {message}") #  log
                 num_replans_triggered += 1 # Metric: Replans triggered
                 rospy.loginfo(f"[PERF_LOG] event=EXEC_REPLAN_TRIGGERED, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_for_log}', waypoint_idx={i}, reason='{message}'")
+                
+                # Signal "replan" 
+                replan_msg = RobotStatus(
+                    robot_id='robot_1',
+                    state='replan',
+                    task_id=task_id_for_log 
+                )
+                
+                self.status_pub.publish(replan_msg) #  publish replan state
+                rospy.loginfo(f"[PERF_LOG] event=EXECUTOR_ROBOT_STATUS_PUBLISHED, timestamp={rospy.Time.now().to_sec():.3f}, robot_id=robot_1, state=replan, task_id='{task_id_for_log}'")
 
                 rospy.loginfo("[EXEC] Requesting new path") #  log
-                get_path_call_start_time = time.monotonic()
-                replan_result = self.get_path( #  call
-                    start_pose=current.pose,
-                    goal_pose=req.waypoints[-1].pose
-                )
-                get_path_call_duration = time.monotonic() - get_path_call_start_time
-                num_new_wp = len(replan_result.waypoints) if replan_result.waypoints else 0
-                rospy.loginfo(f"[PERF_LOG] event=EXEC_REPLAN_GET_PATH_CALL_END, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_for_log}', duration_sec={get_path_call_duration:.3f}, success={num_new_wp > 0}, num_new_waypoints={num_new_wp}")
+                # get_path_call_start_time = time.monotonic()
+                # replan_result = self.get_path( #  call
+                #     start_pose=current.pose,
+                #     goal_pose=req.waypoints[-1].pose
+                # )
+                # get_path_call_duration = time.monotonic() - get_path_call_start_time
+                # num_new_wp = len(replan_result.waypoints) if replan_result.waypoints else 0
+                # rospy.loginfo(f"[PERF_LOG] event=EXEC_REPLAN_GET_PATH_CALL_END, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_for_log}', duration_sec={get_path_call_duration:.3f}, success={num_new_wp > 0}, num_new_waypoints={num_new_wp}")
 
-
-                if replan_result.waypoints:
-                    rospy.loginfo("[EXEC] New path received, awaiting execution") #  log
-                    #  returns success=True to signal manager for replan. Robot remains busy.
-                    exec_duration_sec = rospy.Time.now().to_sec() - handler_start_time_ros
-                    rospy.loginfo(f"[PERF_LOG] event=EXEC_PATH_SUCCESS_REPLAN_INITIATED, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_for_log}', exec_duration_sec={exec_duration_sec:.3f}, num_safety_checks={num_safety_checks_done}, num_replans={num_replans_triggered}")
-                    return ExecutePathResponse(success=True) # 
-                else:
-                    rospy.logerr("[EXEC] Failed to get new path") #  log
-                    exec_duration_sec = rospy.Time.now().to_sec() - handler_start_time_ros
-                    rospy.loginfo(f"[PERF_LOG] event=EXEC_PATH_FAIL, timestamp={rospy.Time.now().to_sec():.3f}, reason='Failed to get new path on replan', task_id='{task_id_for_log}', exec_duration_sec={exec_duration_sec:.3f}, num_safety_checks={num_safety_checks_done}, num_replans={num_replans_triggered}")
-                    # Robot remains busy. Manager needs to handle this state.
-                    return ExecutePathResponse(success=False) # 
+                return ExecutePathResponse(success=True)
+                # if replan_result.waypoints:
+                #     rospy.loginfo("[EXEC] New path received, awaiting execution") #  log
+                #     #  returns success=True to signal manager for replan. Robot remains busy.
+                #     exec_duration_sec = rospy.Time.now().to_sec() - handler_start_time_ros
+                #     rospy.loginfo(f"[PERF_LOG] event=EXEC_PATH_SUCCESS_REPLAN_INITIATED, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_for_log}', exec_duration_sec={exec_duration_sec:.3f}, num_safety_checks={num_safety_checks_done}, num_replans={num_replans_triggered}")
+                #     return ExecutePathResponse(success=True) # 
+                # else:
+                #     rospy.logerr("[EXEC] Failed to get new path") #  log
+                #     exec_duration_sec = rospy.Time.now().to_sec() - handler_start_time_ros
+                #     rospy.loginfo(f"[PERF_LOG] event=EXEC_PATH_FAIL, timestamp={rospy.Time.now().to_sec():.3f}, reason='Failed to get new path on replan', task_id='{task_id_for_log}', exec_duration_sec={exec_duration_sec:.3f}, num_safety_checks={num_safety_checks_done}, num_replans={num_replans_triggered}")
+                #     # Robot remains busy. Manager needs to handle this state.
+                #     return ExecutePathResponse(success=False) # 
 
             rospy.loginfo("[EXEC] Movement validated as safe") #  log
 
             # Validate move distance for forward/backward moves
-            if action in ['F', 'B']: #  condition
+            if action in ['F']: #  condition
                 dx = waypoint.pose.position.x - current.pose.position.x # 
                 dy = waypoint.pose.position.y - current.pose.position.y # 
                 dist = math.hypot(dx, dy)
@@ -337,6 +375,9 @@ class ExecutorAgent:
 
         rospy.loginfo("[EXEC] Path execution completed") #  log
 
+        # Clear visualizations since we're done
+        self.clear_visualizations()
+
         # Signal "idle" again now that we're done
         idle = RobotStatus( # 
             robot_id='robot_1',
@@ -349,6 +390,52 @@ class ExecutorAgent:
         exec_duration_sec = rospy.Time.now().to_sec() - handler_start_time_ros
         rospy.loginfo(f"[PERF_LOG] event=EXEC_PATH_SUCCESS_COMPLETE, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_for_log}', exec_duration_sec={exec_duration_sec:.3f}, num_waypoints_processed={i+1 if req.waypoints else 0}, num_safety_checks={num_safety_checks_done}, num_replans={num_replans_triggered}")
         return ExecutePathResponse(success=True) # 
+
+    def create_pose_marker(self, pose, is_start=True):
+        """Create a visualization marker for start/goal positions"""
+        marker = Marker()
+        marker.header.frame_id = "map"
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = "start_goal_markers"
+        marker.id = 0 if is_start else 1
+        marker.type = Marker.SPHERE
+        marker.action = Marker.ADD
+        marker.pose = pose
+        marker.scale.x = 0.3
+        marker.scale.y = 0.3
+        marker.scale.z = 0.3
+        marker.color.a = 1.0
+        # Green for start, Red for goal
+        marker.color.r = 0.0 if is_start else 1.0
+        marker.color.g = 1.0 if is_start else 0.0
+        marker.color.b = 0.0
+        return marker
+
+    def clear_visualizations(self):
+        """Clear all visualization markers and paths"""
+        # Clear path
+        empty_path = Path()
+        empty_path.header.frame_id = "map"
+        empty_path.header.stamp = rospy.Time.now()
+        self.path_pub.publish(empty_path)
+
+        # Clear start marker
+        start_marker = Marker()
+        start_marker.header.frame_id = "map"
+        start_marker.header.stamp = rospy.Time.now()
+        start_marker.ns = "start_goal_markers"
+        start_marker.id = 0
+        start_marker.action = Marker.DELETE
+        self.start_marker_pub.publish(start_marker)
+
+        # Clear goal marker
+        goal_marker = Marker()
+        goal_marker.header.frame_id = "map"
+        goal_marker.header.stamp = rospy.Time.now()
+        goal_marker.ns = "start_goal_markers"
+        goal_marker.id = 1
+        goal_marker.action = Marker.DELETE
+        self.goal_marker_pub.publish(goal_marker)
 
     def teleport_robot(self, pose):
         """Teleport robot to given pose"""

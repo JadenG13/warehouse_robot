@@ -5,9 +5,17 @@ warehouse_1:
   grid_width: 14
   grid_height: 14
   locations:
-    start:            [39, 40, 0]
-    charging_station: [23, 29, 0]
-    storage_area:     [59, 28, 0] 
+    area 0:         [30, 36, 0]
+    area 1:         [40, 63, 0]
+    area 2:         [50, 56, 0]
+    area 3:         [62, 51, 0] 
+    area 4:         [61, 33, 0]
+    area 5:         [42, 18, 0]
+    area 6:         [31, 31, 0]
+    area 7:         [24, 37, 0]
+    area 8:         [28, 52, 0]
+    area 9:         [37, 42, 0]
+    area 10:        [46, 33, 0]
 
 warehouse_2:
   cell_size: 0.25
@@ -16,6 +24,14 @@ warehouse_2:
   grid_width: 14
   grid_height: 14
   locations:
-    shelf_1:          [60, 58, 0]
-    charging_station: [36, 48, 0]
-    storage_area:     [44, 21, 0] 
+    # area 0:         [36, 27, 0]
+    # area 1:         [46, 42, 0]
+    area 2:         [23, 29, 0]
+    area 3:         [59, 28, 0] 
+    # area 4:         [45, 58, 0]
+    # area 5:         [31, 51, 0]
+    # area 6:         [20, 20, 0]
+    # area 7:         [49, 40, 0]
+    # area 8:         [30, 30, 0]
+    # area 9:         [40, 20, 0]
+    # area 10:        [20, 50, 0]

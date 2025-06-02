@@ -7,6 +7,7 @@ from gazebo_msgs.srv import GetModelState
 from warehouse_robot.srv import GetPath, ExecutePath, ValidatePathWithPat
 from warehouse_robot.msg import RobotStatus
 from geometry_msgs.msg import PoseStamped, Pose, Quaternion
+from nav_msgs.msg import Path  # Added for path visualization
 import numpy as np
 from tf.transformations import euler_from_quaternion
 import time # For timing blocks
@@ -48,6 +49,7 @@ class ManagerAgent:
 
         # Robot state tracking
         self.current_pose = None
+        self.grid_pose = None # for parsing pose to LLM
         self.is_busy = False
         self.is_replanning = False #  flag, behavior preserved
         self.current_task = None   #  state variable
@@ -63,6 +65,14 @@ class ManagerAgent:
         self.status_pub = rospy.Publisher(
             '/robot_1/status',
             RobotStatus,
+            queue_size=1,
+            latch=True
+        )
+
+        # Path visualization publisher
+        self.path_pub = rospy.Publisher(
+            '/planned_path',
+            Path,
             queue_size=1,
             latch=True
         )
@@ -125,7 +135,10 @@ class ManagerAgent:
             p = current.pose.position
             q = current.pose.orientation
             yaw = self._yaw_from_quat(q)
+            grid_x = int(round((p.x - (-10)) / 0.25))
+            grid_y = int(round((p.y - (-10)) / 0.25))            
             self.current_pose = {'x': p.x, 'y': p.y, 'theta': yaw}
+            self.grid_pose = {'x': grid_x, 'y': grid_y, 'theta': round(np.degrees(yaw))}
         else:
             rospy.logwarn("[Manager] Failed to get model state in _update_current_pose")
             self.current_pose = None
@@ -141,13 +154,16 @@ class ManagerAgent:
 
 
         was_busy = self.is_busy
-        self.is_busy = (msg.state == 'busy')
+        self.is_idle = (msg.state == 'idle')
+        # self.is_busy = (msg.state == 'busy')
+        # self.is_replanning = (msg.state == 'replan')
 
         #  logic for task completion via status update
-        if was_busy and not self.is_busy and self.current_task and self.current_task in [t['id'] for t in self.task_list]:
+        if was_busy and self.is_idle and self.current_task and self.current_task in [t['id'] for t in self.task_list]:
             rospy.loginfo(f"[Manager] Task {self.current_task} completed via status update") #  log
             rospy.loginfo(f"[PERF_LOG] event=MANAGER_TASK_COMPLETED_VIA_STATUS, timestamp={log_time:.3f}, task_id='{self.current_task}', robot_id={msg.robot_id}")
             self.remove_task(self.current_task)
+            self.is_busy = False
             self.current_task = None
             if self.task_list:
                 rospy.Timer(
@@ -170,68 +186,83 @@ class ManagerAgent:
             rospy.loginfo(f"[PERF_LOG] event=MANAGER_TASK_REMOVE_ATTEMPT_NO_CHANGE, timestamp={log_time:.3f}, task_id='{task_id}', remaining_tasks={len(self.task_list)}")
 
 
-    def decide_cb(self, _):
-        decide_start_time = rospy.Time.now().to_sec()
-        rospy.loginfo("[Manager] Deciding next task...") #  log
-        rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp={decide_start_time:.3f}")
-
+    def decide_cb(self, _):        
+        self.is_replanning = (self.robot_status["robot_1"].state == 'replan')
         self._update_current_pose()
-
-        if not self.current_pose:
-            #  code did not log here but would return
-            rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_ABORT_NO_POSE, timestamp={rospy.Time.now().to_sec():.3f}")
-            return
-        if self.is_busy:
-            #  code did not log here but would return
-            rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp={rospy.Time.now().to_sec():.3f}")
-            return
-        if not self.task_list:
-            #  code did not log here but would return
-            rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_NO_TASKS, timestamp={rospy.Time.now().to_sec():.3f}")
-            return
-
-        prompt_payload = {
-            'robot_pose': self.current_pose,
-            'pending_tasks': self.task_list,
-            'map_config': self.map_cfg,
-            'instruction': (
-                "Given your current pose, the pending tasks, and the map configuration "
-                "(cell size, origins, named locations), choose the next best task. "
-                "Reply STRICTLY with JSON: {\"next_task\": \"<task_id>\"}."
-            )
-        }
-        rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_REQUEST_SENT, timestamp={rospy.Time.now().to_sec():.3f}, robot_pose={format_pose_for_log(self.current_pose)}, num_pending_tasks={len(self.task_list)}")
-        llm_call_start_time = time.monotonic()
-        text_response = self.client.generate(
-            model=self.model,
-            prompt=json.dumps(prompt_payload)
-        ).response.strip()
-        llm_call_duration = time.monotonic() - llm_call_start_time
-        llm_response_time = rospy.Time.now().to_sec()
-        rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_RESPONSE_RECEIVED, timestamp={llm_response_time:.3f}, duration_sec={llm_call_duration:.3f}, response_summary='{text_response[:100]}...'")
+        if not self.is_replanning:
+            decide_start_time = rospy.Time.now().to_sec()
+            rospy.loginfo("[Manager] Deciding next task...") #  log
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_START, timestamp={decide_start_time:.3f}")
 
 
-        next_task_id_from_llm = None # Renamed to avoid confusion with self.current_task
-        try:
-            next_task_id_from_llm = json.loads(text_response)['next_task']
-        except Exception:
-            m = re.search(r'"next_task"\s*:\s*"([^"]+)"', text_response)
-            if not m:
-                rospy.logerr(f"[Manager] Could not parse LLM response:\n>>{text_response}") #  log
-                rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_PARSE_FAIL, timestamp={rospy.Time.now().to_sec():.3f}")
+            if not self.current_pose:
+                #  code did not log here but would return
+                rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_ABORT_NO_POSE, timestamp={rospy.Time.now().to_sec():.3f}")
                 return
-            next_task_id_from_llm = m.group(1)
+            if self.is_busy:
+                #  code did not log here but would return
+                rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_DEFER_ROBOT_BUSY, timestamp={rospy.Time.now().to_sec():.3f}")
+                return
+            if not self.task_list:
+                #  code did not log here but would return
+                rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_NO_TASKS, timestamp={rospy.Time.now().to_sec():.3f}")
+                return
+            
+            # prompt_payload = {
+            #     'robot_pose': self.current_pose,
+            #     'pending_tasks': self.task_list,
+            #     'map_config': self.map_cfg,
+            #     'instruction': (
+            #         "Given your current pose, the pending tasks, and the map configuration "
+            #         "(cell size, origins, named locations), choose the next best task. "
+            #         "Reply STRICTLY with JSON: {\"next_task\": \"<task_id>\"}."
+            #     )
+            # }
+            rospy.logerr(f"[Manager] {self.task_list}")
+            prompt_payload = {
+                'robot_pose': self.grid_pose,
+                'pending_tasks': self.task_list,
+                'instruction': (
+                    "Given your current pose and the pending tasks, choose the next best task. "
+                    "Reply STRICTLY with JSON: {\"next_task\": \"<task_id>\"}. "
+                    "Do not write any additional text or code. "
+                )
+            }
+            
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_REQUEST_SENT, timestamp={rospy.Time.now().to_sec():.3f}, robot_pose={format_pose_for_log(self.current_pose)}, num_pending_tasks={len(self.task_list)}")
+            llm_call_start_time = time.monotonic()
+            text_response = self.client.generate(
+                model=self.model,
+                prompt=json.dumps(prompt_payload)
+            ).response.strip()
+            llm_call_duration = time.monotonic() - llm_call_start_time
+            llm_response_time = rospy.Time.now().to_sec()
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_RESPONSE_RECEIVED, timestamp={llm_response_time:.3f}, duration_sec={llm_call_duration:.3f}, response_summary='{text_response[:100]}...'")
 
-        rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_SUGGESTED_TASK, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{next_task_id_from_llm}'")
 
-        assign_task_success = self._assign_task(next_task_id_from_llm)
-        if assign_task_success:
-            self._plan_and_execute(next_task_id_from_llm)
-        else:
-            #  code did not have an else here for _assign_task failure from decide_cb
-            rospy.loginfo(f"[PERF_LOG] event=MANAGER_ASSIGN_TASK_FAILED_FROM_DECIDE_CB, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{next_task_id_from_llm}'")
+            next_task_id_from_llm = None # Renamed to avoid confusion with self.current_task
+            try:
+                next_task_id_from_llm = json.loads(text_response)['next_task']
+            except Exception:
+                m = re.search(r'"next_task"\s*:\s*"([^"]+)"', text_response)
+                if not m:
+                    rospy.logerr(f"[Manager] Could not parse LLM response:\n>>{text_response}") #  log
+                    rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_PARSE_FAIL, timestamp={rospy.Time.now().to_sec():.3f}")
+                    return
+                next_task_id_from_llm = m.group(1)
 
-        rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_END, timestamp={rospy.Time.now().to_sec():.3f}, total_duration_sec={rospy.Time.now().to_sec() - decide_start_time:.3f}")
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_LLM_SUGGESTED_TASK, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{next_task_id_from_llm}'")
+
+            assign_task_success = self._assign_task(next_task_id_from_llm)
+            if assign_task_success:
+                self._plan_and_execute(next_task_id_from_llm)
+            else:
+                #  code did not have an else here for _assign_task failure from decide_cb
+                rospy.loginfo(f"[PERF_LOG] event=MANAGER_ASSIGN_TASK_FAILED_FROM_DECIDE_CB, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{next_task_id_from_llm}'")
+
+            rospy.loginfo(f"[PERF_LOG] event=MANAGER_DECIDE_CB_END, timestamp={rospy.Time.now().to_sec():.3f}, total_duration_sec={rospy.Time.now().to_sec() - decide_start_time:.3f}")
+        else: 
+            self._plan_and_execute(self.robot_status["robot_1"].task_id) #  uses robot_status to get task_id
 
 
     def _assign_task(self, task_id_to_assign):
@@ -317,6 +348,7 @@ class ManagerAgent:
 
         if not pat_resp.exists:
             rospy.logerr(f"[Manager] PAT verification shows no path exists for task {task_id_being_processed}: {pat_resp.message}") #  log
+            self.remove_task(task_id_being_processed)
             if self.current_task: #  check
                 self.is_busy = False
                 self.current_task = None
@@ -361,6 +393,15 @@ class ManagerAgent:
 
         rospy.loginfo(f"[Manager] Planner found {len(path_resp.waypoints)} waypoints for task {task_id_being_processed}") #  log
 
+        # Publish the planned path for visualization in RViz
+        if hasattr(path_resp, 'path'):
+            path_msg = path_resp.path
+            if not path_msg.header.frame_id:
+                path_msg.header.frame_id = "map"
+            path_msg.header.stamp = rospy.Time.now()
+            self.path_pub.publish(path_msg)
+            rospy.loginfo("[Manager] Published planned path for visualization")
+
         if len(path_resp.waypoints) == 1 and path_resp.descriptions and path_resp.descriptions[0] == "Already at goal":
             rospy.loginfo(f"[Manager] Already at goal location for task {task_id_being_processed}") #  log
             rospy.loginfo(f"[PERF_LOG] event=MANAGER_TASK_ALREADY_AT_GOAL, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}'")
@@ -403,6 +444,18 @@ class ManagerAgent:
 
 
         if exec_resp.success: #  logic branch
+            status = self.robot_status.get('robot_1')
+            if status and status.state == 'replan':
+                rospy.loginfo("[Manager] Execution returned success but task not complete, retrying with new path") #  log
+                rospy.loginfo(f"[PERF_LOG] event=MANAGER_EXEC_SUCCESS_AWAIT_STATUS_OR_REPLAN, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}', robot_state={status.state if status else 'UNKNOWN'}")
+                # self.is_replanning = True #  set flag
+                # rospy.Timer(
+                #     rospy.Duration(1.0),
+                #     lambda _: self._plan_and_execute(task_id_being_processed), #  passes task_id_being_processed
+                #     oneshot=True
+                # )
+                return
+            
             if task_id_being_processed not in [t['id'] for t in self.task_list]:
                 rospy.loginfo(f"[Manager] Task {task_id_being_processed} was completed during execution") #  log
                 rospy.loginfo(f"[PERF_LOG] event=MANAGER_TASK_ALREADY_REMOVED_POST_EXEC, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}'")
@@ -410,7 +463,6 @@ class ManagerAgent:
                     self.current_task = None
                 return
 
-            status = self.robot_status.get('robot_1')
             if status and status.state == 'idle':
                 rospy.loginfo(f"[Manager] Task {task_id_being_processed} completed normally") #  log
                 rospy.loginfo(f"[PERF_LOG] event=MANAGER_TASK_COMPLETED_POST_EXEC_SUCCESS, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}'")
@@ -418,14 +470,6 @@ class ManagerAgent:
                 self.current_task = None
                 return
 
-            rospy.loginfo("[Manager] Execution returned success but task not complete, retrying with new path") #  log
-            rospy.loginfo(f"[PERF_LOG] event=MANAGER_EXEC_SUCCESS_AWAIT_STATUS_OR_REPLAN, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}', robot_state={status.state if status else 'UNKNOWN'}")
-            rospy.Timer(
-                rospy.Duration(1.0),
-                lambda _: self._plan_and_execute(task_id_being_processed), #  passes task_id_being_processed
-                oneshot=True
-            )
-            return
         else: #  logic branch for exec_resp.success == False
             rospy.logerr(f"[Manager] Execution failed for {task_id_being_processed}") #  log
             rospy.loginfo(f"[PERF_LOG] event=MANAGER_TASK_EXECUTION_FAILED, timestamp={rospy.Time.now().to_sec():.3f}, task_id='{task_id_being_processed}'")
