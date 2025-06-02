@@ -1,6 +1,7 @@
 # Warehouse Robot
 
 *(3806ICT) Robotics Agents and Reasoning*
+Authors: Maya Wood, Ian Tan, Jaden Gibbons, Shromm Gaind
 
 ## Setup Instructions
 
