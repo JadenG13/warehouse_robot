@@ -159,17 +159,16 @@ public:
             throw std::runtime_error("Failed to get world_name parameter");
         }
         
-        if (!nh_.getParam("/" + world_name_, config_)) {
-            ROS_ERROR_STREAM("[Validator] Failed to get config for world: " << world_name_);
-            throw std::runtime_error("Failed to get world configuration");
+        if (!nh_.getParam("/" + world_name_ + "/cell_size", cell_size_)) {
+            ROS_ERROR_STREAM("Failed to load " << world_name_ << "/cell_size");
+        }
+        if (!nh_.getParam("/" + world_name_ + "/grid_origin_x", grid_origin_x_)) {
+            ROS_ERROR_STREAM("Failed to load " << world_name_ << "/grid_origin_x");
+        }
+        if (!nh_.getParam("/" + world_name_ + "/grid_origin_y", grid_origin_y_)) {
+            ROS_ERROR_STREAM("Failed to load " << world_name_ << "/grid_origin_y");
         }
         
-        // Get configuration values
-        cell_size_ = static_cast<double>(config_["cell_size"]);
-        grid_origin_x_ = static_cast<double>(config_["grid_origin_x"]);
-        grid_origin_y_ = static_cast<double>(config_["grid_origin_y"]);
-        
-
         // Initialize ROS components
         costmap_sub_ = nh_.subscribe("/move_base/global_costmap/costmap", 10, 
             &ValidatorAgent::costmapCallback, this);
