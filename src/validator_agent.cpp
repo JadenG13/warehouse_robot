@@ -47,8 +47,8 @@ private:
     // map: Occupancy grid pointer
     // Returns: (x, y) grid coordinates
     std::pair<int, int> worldToGrid(double x, double y, const nav_msgs::OccupancyGrid::ConstPtr& map) {
-        int grid_x = static_cast<int>(std::round((x - map->info.origin.position.x) / map->info.resolution));
-        int grid_y = static_cast<int>(std::round((y - map->info.origin.position.y) / map->info.resolution));
+        int grid_x = static_cast<int>(std::round((x - map->info.origin.position.x) / cell_size_));
+        int grid_y = static_cast<int>(std::round((y - map->info.origin.position.y) / cell_size_));
         return {grid_x, grid_y};
     }
 
@@ -255,8 +255,8 @@ public:
 
             // Add debug logging
             ROS_INFO_STREAM("[Validator] Map bounds: (" << origin_x << "," << origin_y << ") to (" 
-                          << (origin_x + costmap_width * resolution) << "," 
-                          << (origin_y + costmap_height * resolution) << ")");
+                          << (origin_x + costmap_width * cell_size_) << "," 
+                          << (origin_y + costmap_height * cell_size_) << ")");
             ROS_INFO_STREAM("[Validator] Crop area: (" << min_x << "," << min_y << ") to ("
                           << max_x << "," << max_y << ")");
             ROS_INFO_STREAM("[Validator] Adjusted start: (" << start.first << "," << start.second 
