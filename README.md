@@ -1,8 +1,14 @@
 # Warehouse Robot
 
 *(3806ICT) Robotics Agents and Reasoning*
+Authors: Maya Wood, Ian Tan, Jaden Gibbons, Shromm Gaind
 
 ## Setup Instructions
+
+0. Prerequisites:
+   - Install **ROS Noetic** on Ubuntu 20.04
+   - Ensure **Python 3** is installed
+   - Ensure **GCC version 8** or higher is installed, or an equivalent compiler that supports C++17
 
 1. Create the workspace directory:
    ```bash
