@@ -56,7 +56,11 @@ ollama serve
 
 ### Launch the Package
 
-Launch the package with the specified world:
+Launch the package with the specified world. You can use `warehouse_1` or `warehouse_2`:
 ```bash
 roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_1
+```
+Or:
+```bash
+roslaunch warehouse_robot grid_navigation.launch world_name:=warehouse_2
 ```
